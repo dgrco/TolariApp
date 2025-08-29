@@ -1,0 +1,21 @@
+@import "../colors.css";
+@import "../common.css";
+
+#topBar {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
+#topBar .btn:last-child {
+    height: 2.5rem;
+    width: 4rem;
+    font-size: 0.8rem;
+}
+
+.columns {
+    display: flex;
+    flex: 1;
+    gap: 2rem;
+    margin: 0 2rem;
+}

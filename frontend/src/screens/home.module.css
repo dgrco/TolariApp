@@ -1,0 +1,102 @@
+@import "../colors.css";
+@import "../common.css";
+
+#menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem;
+}
+
+#home {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    text-align: center;
+}
+
+#menu .spacer {
+    height: 2.2rem;
+    width: 2.2rem;
+}
+
+#nav {
+    display: flex;
+    justify-content: space-around;
+    width: 33%;
+    background-color: var(--color-secondary-bg);
+    border-top-left-radius: 5rem;
+    border-bottom-left-radius: 5rem;
+    border-top-right-radius: 5rem;
+    border-bottom-right-radius: 5rem;
+}
+
+#nav .btn {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 0rem;
+    font-size: 1rem;
+}
+
+#nav .btn:first-child {
+    border-top-left-radius: 5rem;
+    border-bottom-left-radius: 5rem;
+    border-right: 1px solid var(--color-border);
+}
+
+#nav .btn:last-child {
+    border-top-right-radius: 5rem;
+    border-bottom-right-radius: 5rem;
+    border-left: 1px solid var(--color-border);
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+}
+
+#bottomBar {
+    display: flex;
+    margin: 1rem;
+    justify-content: center;
+    font-weight: 600;
+}
+
+#bottomBar .btn {
+    width: 10rem;
+    height: 2rem;
+    font-size: 1rem;
+    padding: 0.1rem;
+    margin-bottom: 1.5rem;
+}
+
+#cardContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#cardContainer .btn {
+    margin: 0 1rem;
+    height: 3rem;
+    width: 3rem;
+    font-size: 2rem;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#cardWrapper {
+  animation: popIn 0.2s ease-in forwards;
+  transform-origin: center;
+}

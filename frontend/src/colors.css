@@ -1,0 +1,19 @@
+:root {
+  --color-bg: #121212;
+  --color-bg-lighter: color-mix(in srgb, var(--color-bg) 92%, var(--color-text));
+  --color-secondary-bg: #1E1E1E;
+
+  --color-primary: #7C3AED;
+  --color-primary-hover: #9F67F3;
+
+  --color-secondary: #3B82F6;
+  --color-secondary-hover: #60A5FA;
+
+  --color-text: #F3F4F6;
+  --color-muted: #9CA3AF;
+  --color-border: #2A2A2A;
+
+  --color-success: #22C55E;
+  --color-warning: #EAB308;
+  --color-error: #EF4444;
+}

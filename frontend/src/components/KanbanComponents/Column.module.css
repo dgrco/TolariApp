@@ -1,0 +1,25 @@
+@import "../../colors.css";
+@import "../../common.css";
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+    width: 100%;
+    background-color: var(--color-secondary-bg);
+    border-radius: 1rem;
+    padding-bottom: 1rem;
+}
+
+.title {
+    font-weight: bold;
+    width: 100%;
+    background-color: rgba(20, 20, 20, 0.8);
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.content {
+    padding: 0 1rem;
+}

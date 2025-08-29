@@ -1,0 +1,20 @@
+@import "../../colors.css";
+@import "../../common.css";
+
+.card {
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    background-color: var(--color-bg-lighter);
+    word-break: break-all;
+    border-radius: 1rem;
+    touch-action: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.card:hover {
+    cursor: pointer;
+}
