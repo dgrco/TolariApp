@@ -8,14 +8,14 @@ export interface ICard {
 }
 
 export default function Card({ id, content }: ICard) {
-  const { 
+  const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
     isDragging,
-  } = useSortable({id});
+  } = useSortable({ id });
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),

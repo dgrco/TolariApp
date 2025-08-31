@@ -39,3 +39,8 @@ body {
 #app {
     height: 100vh;
 }
+
+body.dragging,
+body.dragging * {
+  cursor: grabbing !important;
+}

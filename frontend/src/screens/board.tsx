@@ -9,17 +9,14 @@ import Card, { ICard } from "../components/KanbanComponents/Card";
 import Modal from "../components/Modal";
 import { main } from "../../wailsjs/go/models";
 import { GetAllKanbanCards, GetAllKanbanColumns, SaveKanbanCard, SaveKanbanColumns } from "../../wailsjs/go/main/App";
+import { createPortal } from "react-dom";
 
 export interface IColumnValue {
   title: string;
   cardIds: string[];
 }
 type ColumnsType = Record<string, IColumnValue>;
-const initialColumns: ColumnsType = {
-  'column-1': { title: 'To-Do', cardIds: [] },
-  'column-2': { title: 'In Progress', cardIds: [] },
-  'column-3': { title: 'Done', cardIds: [] },
-}
+const initialColumns: ColumnsType = {}
 
 type CardsType = Record<string, string>;
 const initialCards = {};
@@ -59,6 +56,11 @@ export default function Board() {
       setCards(newCards);
       setLoading(false);
     })();
+
+    // Ensure grabbing cursor clears on unmount
+    return () => {
+      document.body.classList.remove("dragging");
+    };
   }, [])
 
   // Define sensors to detect drag operations (e.g., pointer for mouse/touch, keyboard for accessibility).
@@ -103,7 +105,7 @@ export default function Board() {
     } else {
       console.error("Unable to find the active column")
     }
-    console.log('drag start')
+    document.body.classList.add("dragging")
   }
 
   function moveItemBetweenColumns(
@@ -178,6 +180,7 @@ export default function Board() {
 
     // Update the local state in memory, and save this new state to disk.
     setColumns(prev => {
+      // NOTE: this next line seems redundant, but it bugs out without it
       const next = moveItemBetweenColumns(prev, activeId, overId);
 
       SaveKanbanColumns(parseColumns(next)).catch(console.error)
@@ -185,6 +188,7 @@ export default function Board() {
       return next;
     });
 
+    document.body.classList.remove("dragging")
     setActiveDragItem(null);
   }
 
@@ -250,6 +254,7 @@ export default function Board() {
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
+        onDragCancel={() => document.body.classList.remove("dragging")}
       >
         <div className={styles.columns}>
           {
@@ -267,12 +272,17 @@ export default function Board() {
             })
           }
         </div>
-        <DragOverlay>
-          {activeDragItem ?
-            <Card id={activeDragItem.id} content={cards[activeDragItem.id]} />
-            : null
-          }
-        </DragOverlay>
+        {
+          createPortal(
+            <DragOverlay>
+              {activeDragItem ?
+                <Card id={activeDragItem.id} content={cards[activeDragItem.id]} />
+                : null
+              }
+            </DragOverlay>,
+            document.body
+          )
+        }
       </DndContext>
     </div>
   )
