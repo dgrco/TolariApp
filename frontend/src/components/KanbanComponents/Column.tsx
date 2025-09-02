@@ -1,7 +1,4 @@
-import styles from "./Column.module.css";
 import Card, { ICard } from "./Card";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 import { useState } from "react";
 import { IColumnValue } from "../../screens/board";
 
@@ -12,40 +9,16 @@ interface ColumnProps {
 }
 
 export default function Column({ id, column, tasks }: ColumnProps) {
-  const { setNodeRef } = useDroppable({ id });
-  const [isOverColumn, setIsOverColumn] = useState(false);
-
-  useDndMonitor({
-    onDragOver(event) {
-      if (!event.over) {
-        setIsOverColumn(false);
-        return;
-      }
-      const overId = event.over.id as string;
-
-      setIsOverColumn(overId === id || tasks.some(t => t.id === overId));
-    },
-    onDragEnd() {
-      setIsOverColumn(false);
-    }
-  });
-
-  const style = {
-    opacity: isOverColumn ? 0.85 : 1,
-  };
-
   return (
-    <SortableContext id={id} items={tasks} strategy={verticalListSortingStrategy}>
-      <div ref={setNodeRef} style={style} className={styles.column}>
-        <div className={styles.title}>
-          {column.title}
-        </div>
-        <div className={styles.content}>
-          {tasks.map((task) => (
-            <Card key={task.id} id={task.id} content={task.content} />
-          ))}
-        </div>
+    <div className="flex flex-col flex-1 w-full bg-dark-secondary rounded-xl pb-4 shadow-xl gap-4">
+      <div className="font-bold w-full text-lg tracking-wide rounded-t-xl bg-violet-900 text-center p-4 select-none">
+        {column.title}
       </div>
-    </SortableContext>
+      <div className="flex flex-col gap-4 px-4">
+        {tasks.map((task) => (
+          <Card key={task.id} id={task.id} content={task.content} />
+        ))}
+      </div>
+    </div>
   );
 }

@@ -1,35 +1,44 @@
 import { Link } from "react-router-dom";
 import { useContext, useRef } from "react";
-import styles from "./add.module.css"
-import { SaveFlashcard, GetCurrentDateString } from "../../wailsjs/go/main/App";
+import { SaveFlashcard } from "../../wailsjs/go/main/App";
 import { useNavigate } from "react-router-dom";
-import { main } from "../../wailsjs/go/models";
 import { FlashcardContext } from "../contexts/FlashcardContext";
 
 export default function AddPage() {
   const frontRef = useRef<HTMLInputElement | null>(null);
   const backRef = useRef<HTMLTextAreaElement | null>(null);
   const navigate = useNavigate();
-  const cardCtx = useContext(FlashcardContext)
+  const cardCtx = useContext(FlashcardContext);
 
   return (
-    <div id={styles.add} className="fade-up">
-      <div id={styles.top_bar}>
-        <Link to="/" className={`${styles.btn} ${styles.btnSecondaryBg} ${styles.iconBtn}`}>
-          🠔
+    <div className="flex flex-col h-screen p-4 bg-dark">
+      <div className="flex justify-start">
+        <Link to="/" className="p-2 w-10 h-10 bg-dark-secondary text-xl rounded-full flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
+          &#8592;
         </Link>
       </div>
-      <div id={styles.main}>
-        <span style={{ fontSize: '2rem', marginBottom: '2rem' }}>Add a new Flashcard</span>
-        <div id={styles.user_input}>
-          <input className={styles.text_input} type="text" placeholder="Front" ref={frontRef} />
-          <textarea className={styles.text_input} rows={8} cols={20} placeholder="Back" ref={backRef} />
+      <div className="flex flex-col items-center justify-center flex-1">
+        <span className="text-2xl mb-8">Add a new Flashcard</span>
+        <div className="flex flex-col w-full max-w-lg space-y-4">
+          <input
+            className="w-full p-4 rounded-lg bg-dark-secondary placeholder-muted border-2 border-border focus:outline-none focus:border-primary-hover transition-colors duration-200"
+            type="text"
+            placeholder="Front"
+            ref={frontRef}
+          />
+          <textarea
+            className="w-full p-4 rounded-lg bg-dark-secondary placeholder-muted border-2 border-border focus:outline-none focus:border-primary-hover transition-colors duration-200 resize-none"
+            rows={8}
+            cols={20}
+            placeholder="Back"
+            ref={backRef}
+          />
           <button
-            className={`${styles.btn} ${styles.btnPrimaryGrad} ${styles.wFull}`}
+            className="w-full py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-semibold hover:opacity-80 transition-colors duration-200"
             onClick={async () => {
               try {
                 const flashcard = await SaveFlashcard(frontRef.current!.value, backRef.current!.value);
-                console.log(flashcard)
+                console.log(flashcard);
                 cardCtx.setFlashcards(prev => ({
                   ...prev,
                   [flashcard.id]: flashcard,
@@ -38,7 +47,8 @@ export default function AddPage() {
                 console.error(err);
               }
               navigate('/');
-            }}>
+            }}
+          >
             Add
           </button>
         </div>

@@ -1,35 +1,12 @@
-import styles from "./Card.module.css";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-
 export interface ICard {
   id: string,
   content: string,
 }
 
 export default function Card({ id, content }: ICard) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
-
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition: transition,
-    opacity: isDragging ? 0.5 : 1,
-  }
-
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className={`${styles.card}`}
+      className="flex p-4 items-center bg-gray-600 break-all rounded-xl border border-gray-600 shadow-md touch-none select-none transition-all duration-150 ease-in-out hover:cursor-grab hover:-translate-y-[0.15rem] hover:shadow-xl"
     >
       {content}
     </div>

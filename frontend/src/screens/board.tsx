@@ -1,10 +1,7 @@
 import { Link } from "react-router-dom";
-import styles from "./board.module.css";
 import Column from "../components/KanbanComponents/Column";
 import { useEffect, useRef, useState } from "react";
-import { closestCorners, DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import invariant from "tiny-invariant";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import Card, { ICard } from "../components/KanbanComponents/Card";
 import Modal from "../components/Modal";
 import { main } from "../../wailsjs/go/models";
@@ -63,14 +60,6 @@ export default function Board() {
     };
   }, [])
 
-  // Define sensors to detect drag operations (e.g., pointer for mouse/touch, keyboard for accessibility).
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
   function findColumn(id: string) {
     if (id in columns) {
       return id;
@@ -93,103 +82,6 @@ export default function Board() {
         ]
       }));
     return parsedColumns;
-  }
-
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event;
-    invariant(active);
-    const activeId = active.id as string;
-    const activeColumn = findColumn(activeId);
-    if (activeColumn) {
-      setActiveDragItem({ id: activeId, columnId: activeColumn });
-    } else {
-      console.error("Unable to find the active column")
-    }
-    document.body.classList.add("dragging")
-  }
-
-  function moveItemBetweenColumns(
-    prev: ColumnsType,
-    activeId: string,
-    overId: string
-  ): ColumnsType {
-    const activeColumn = findColumn(activeId);
-    const overColumn = findColumn(overId);
-
-    if (!activeColumn || !overColumn) return prev;
-
-    const activeItems = prev[activeColumn].cardIds;
-    const overItems = prev[overColumn].cardIds;
-
-    const activeIndex = activeItems.indexOf(activeId);
-    const overIndex = overItems.indexOf(overId);
-
-    // Dragging into same column
-    if (activeColumn === overColumn) {
-      if (activeIndex !== overIndex) {
-        return {
-          ...prev,
-          [overColumn]: {
-            ...columns[overColumn],
-            cardIds: arrayMove(overItems, activeIndex, overIndex),
-          }
-        };
-      }
-      return prev;
-    }
-
-    // Dragging into another column
-    const newIndexInOverColumn = overIndex !== -1 ? overIndex : overItems.length;
-
-    return {
-      ...prev,
-      [activeColumn]: {
-        ...columns[activeColumn],
-        cardIds: [
-          ...activeItems.slice(0, activeIndex),
-          ...activeItems.slice(activeIndex + 1),
-        ],
-      },
-      [overColumn]: {
-        ...columns[overColumn],
-        cardIds: [
-          ...overItems.slice(0, newIndexInOverColumn),
-          activeId,
-          ...overItems.slice(newIndexInOverColumn),
-        ],
-      },
-    };
-  }
-
-  function handleDragOver(event: DragOverEvent) {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id as string;
-    const overId = over.id as string;
-
-    setColumns(prev => moveItemBetweenColumns(prev, activeId, overId));
-  }
-
-  async function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id as string;
-    const overId = over.id as string;
-
-    // Update the local state in memory, and save this new state to disk.
-    setColumns(prev => {
-      // NOTE: this next line seems redundant, but it bugs out without it
-      const next = moveItemBetweenColumns(prev, activeId, overId);
-
-      SaveKanbanColumns(parseColumns(next)).catch(console.error)
-
-      return next;
-    });
-
-    document.body.classList.remove("dragging")
-    setActiveDragItem(null);
   }
 
   const addCard = async () => {
@@ -219,71 +111,48 @@ export default function Board() {
   }
 
   if (loading) {
-    return <div className="fade-up" style={{ color: 'white' }}>Loading board…</div>;
+    return <div className="" style={{ color: 'white' }}>Loading board…</div>;
   }
 
   return (
-    <div id={styles.plan} className="fade-up">
-      <div id={styles.topBar}>
-        <Link to="/" className={`${styles.btn} ${styles.btnSecondaryBg} ${styles.iconBtn}`}>
-          🠔
+    <div className="flex flex-col h-screen pb-5">
+      <div className="flex justify-between p-4">
+        <Link to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200">
+          &#8592;
         </Link>
         <button
           onClick={() => setShowModal(true)}
-          className={`${styles.btn} ${styles.btnPrimaryGrad}`}
+          className="h-10 w-16 text-xs font-semibold rounded-full bg-gradient-to-r from-primary to-secondary hover:opacity-85 transition-opacity ease duration-200"
         >
-          +
-          <span style={{ marginLeft: '0.2rem' }}>Add</span>
+          + Add
         </button>
       </div>
       {showModal &&
         <Modal onClose={() => setShowModal(false)}>
-          <span>Add Task</span>
-          <input type="text" ref={newTask} />
+          <span className="text-lg">Add Task</span>
+          <input type="text" ref={newTask} className="p-2 rounded-md bg-dark-secondary-hover text-white border-2 border-gray-600 focus:outline-none focus:border-primary" />
           <button
-            className={`${styles.btn} ${styles.btnPrimaryGrad}`}
+            className="h-10 w-24 text-xs font-semibold rounded-full bg-gradient-to-r from-primary to-secondary hover:opacity-85 transition-opacity ease duration-200 mx-auto"
             onClick={addCard}
           >
             Add
           </button>
         </Modal>
       }
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-        onDragCancel={() => document.body.classList.remove("dragging")}
-      >
-        <div className={styles.columns}>
-          {
-            columnOrder.map((columnId) => {
-              const column = columns[columnId];
-              const tasks: ICard[] = column.cardIds.map(cardId => {
-                return {
-                  id: cardId,
-                  content: cards[cardId],
-                }
-              });
-              return (
-                <Column key={columnId} column={column} id={columnId} tasks={tasks} />
-              );
-            })
-          }
-        </div>
+      <div className="flex flex-1 gap-8 mx-8">
         {
-          createPortal(
-            <DragOverlay>
-              {activeDragItem ?
-                <Card id={activeDragItem.id} content={cards[activeDragItem.id]} />
-                : null
-              }
-            </DragOverlay>,
-            document.body
-          )
+          columnOrder.map((columnId) => {
+            const column = columns[columnId];
+            const tasks = column.cardIds.map(cardId => ({
+              id: cardId,
+              content: cards[cardId],
+            }));
+            return (
+              <Column key={columnId} column={column} id={columnId} tasks={tasks} />
+            );
+          })
         }
-      </DndContext>
+      </div>
     </div>
-  )
+  );
 }

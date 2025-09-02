@@ -4,7 +4,6 @@ import { GetReviewCards, ReviewCard } from "../../wailsjs/go/main/App";
 import { main } from "../../wailsjs/go/models";
 import Flashcard from "../components/Flashcard";
 import { FlashcardContext } from "../contexts/FlashcardContext";
-import styles from "./review.module.css";
 
 export default function Review() {
   const cardCtx = useContext(FlashcardContext);
@@ -23,104 +22,82 @@ export default function Review() {
   }, []);
 
   return (
-    <div id={styles.review} className="fade-up">
-      <div id={styles.topBar}>
-        <Link to="/" className={`${styles.btn} ${styles.btnSecondaryBg}`}>
-          🠔
-          &nbsp;
-          Exit Review
+    <div className="flex flex-col h-screen p-6 bg-dark">
+      <div className="flex justify-start">
+        <Link to="/" className="px-4 py-2 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
+          &#8592;
+          <span className="ml-2">Exit Review</span>
         </Link>
       </div>
-      <div id={styles.main}>
-        <div id={styles.cardContainer}>
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="w-full flex items-center justify-center mb-8">
           {
             reviewCardIndex !== null && reviewCardIndex < reviewCards.length ?
-              (<div key={reviewCardIndex} id={styles.cardWrapper}>
+              (<div key={reviewCardIndex}>
                 <Flashcard card={reviewCards[reviewCardIndex]} />
               </div>) :
-              <p>No Cards to Review</p>
+              <p className="text-xl">No Cards to Review</p>
           }
         </div>
         {
           reviewCardIndex !== null && reviewCardIndex < reviewCards.length &&
-          <>
-            <p className={styles.question}>How well did you recall this?</p>
-            <div id={styles.bottomBar}>
+          <div> 
+            <p className="text-lg text-muted text-center mt-auto mb-4">How well did you recall this?</p>
+            <div className="w-full flex justify-center gap-4 mb-8">
               <button
-                className={`${styles.btn} ${styles.btnOutline} ${styles.btnLerp1}`}
+                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-error hover:border-error"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
-                    console.log(cardID);
                     try {
-                      const updatedCard = await ReviewCard(cardID, 0);
-                      cardCtx.setFlashcards(prev => ({
-                        ...prev,
-                        [updatedCard.id]: updatedCard,
-                      }));
+                      await ReviewCard(cardID, 0);
                       setReviewCardIndex(reviewCardIndex + 1);
-                      console.log(updatedCard.review_date);
                     } catch (err) {
                       console.error(err);
                     }
                   }
-                }}>Wrong</button>
+                }}>Fail</button>
               <button
-                className={`${styles.btn} ${styles.btnOutline} ${styles.btnLerp2}`}
+                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-warning hover:border-warning"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
                     try {
-                      const updatedCard = await ReviewCard(cardID, 3);
-                      cardCtx.setFlashcards(prev => ({
-                        ...prev,
-                        [updatedCard.id]: updatedCard,
-                      }));
+                      await ReviewCard(cardID, 3);
                       setReviewCardIndex(reviewCardIndex + 1);
-                      console.log(updatedCard.review_date);
                     } catch (err) {
                       console.error(err);
                     }
                   }
                 }}>Hard</button>
               <button
-                className={`${styles.btn} ${styles.btnOutline} ${styles.btnLerp3}`}
+                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-secondary hover:border-secondary"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
                     try {
-                      const updatedCard = await ReviewCard(cardID, 4);
-                      cardCtx.setFlashcards(prev => ({
-                        ...prev,
-                        [updatedCard.id]: updatedCard,
-                      }));
+                      await ReviewCard(cardID, 4);
                       setReviewCardIndex(reviewCardIndex + 1);
-                      console.log(updatedCard.review_date);
                     } catch (err) {
                       console.error(err);
                     }
                   }
                 }}>Fair</button>
               <button
-                className={`${styles.btn} ${styles.btnOutline} ${styles.btnLerp4}`}
+                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-success hover:border-success"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
                     try {
-                      const updatedCard = await ReviewCard(cardID, 5);
-                      cardCtx.setFlashcards(prev => ({
-                        ...prev,
-                        [updatedCard.id]: updatedCard,
-                      }));
+                      await ReviewCard(cardID, 5);
                       setReviewCardIndex(reviewCardIndex + 1);
-                      console.log(updatedCard.review_date);
                     } catch (err) {
                       console.error(err);
                     }
                   }
                 }}>Easy</button>
             </div>
-          </>
+          </div>
         }
       </div>
     </div>
