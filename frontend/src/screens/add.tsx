@@ -3,6 +3,7 @@ import { useContext, useRef } from "react";
 import { SaveFlashcard } from "../../wailsjs/go/main/App";
 import { useNavigate } from "react-router-dom";
 import { FlashcardContext } from "../contexts/FlashcardContext";
+import { motion } from "framer-motion";
 
 export default function AddPage() {
   const frontRef = useRef<HTMLInputElement | null>(null);
@@ -11,7 +12,11 @@ export default function AddPage() {
   const cardCtx = useContext(FlashcardContext);
 
   return (
-    <div className="flex flex-col h-screen p-4 bg-dark">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col h-screen p-4 bg-dark"
+    >
       <div className="flex justify-start">
         <Link to="/" className="p-2 w-10 h-10 bg-dark-secondary text-xl rounded-full flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
           &#8592;
@@ -53,6 +58,6 @@ export default function AddPage() {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
