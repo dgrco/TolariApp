@@ -23,9 +23,8 @@ type AppSettings struct {
 }
 
 type KanbanDataFile struct {
-	Columns    KanbanColumnMap `json:"columns"`
-	Cards      KanbanCardMap   `json:"cards"`
-	NextCardId uint64          `json:"nextCardId"`
+	Cards      []KanbanCard `json:"cards"`
+	NextCardId uint64       `json:"nextCardId"`
 }
 
 // App struct
@@ -57,21 +56,7 @@ func (a *App) startup(ctx context.Context) {
 	_, err = os.Stat(kanbanStatePath)
 	if errors.Is(err, os.ErrNotExist) { // Initialize the data file
 		initialState := KanbanDataFile{
-			Columns: KanbanColumnMap{
-				1: {
-					Title:   "To-Do",
-					CardIds: []uint64{},
-				},
-				2: {
-					Title:   "In Progress",
-					CardIds: []uint64{},
-				},
-				3: {
-					Title:   "Done",
-					CardIds: []uint64{},
-				},
-			},
-			Cards:      make(KanbanCardMap),
+			Cards:      []KanbanCard{},
 			NextCardId: 1,
 		}
 		marshalledState, err := json.Marshal(initialState)
@@ -441,27 +426,11 @@ func (a *App) saveKanbanData() {
 // NOTE: All Kanban Storage will be placed in a separate json file (kanban-state.json)
 // to match the in-memory representation for simplicity and efficiency.
 // For now, the SQL DB will only be for flashcards.
-type KanbanColumn struct {
-	Title   string   `json:"title"`
-	CardIds []uint64 `json:"cardIds"`
-}
 
-type KanbanColumnMap map[uint64]KanbanColumn
-
-func (a *App) GetAllKanbanColumns() KanbanColumnMap {
-	return a.kanbanData.Columns
-}
-
-func (a *App) GetKanbanColumn(columnId uint64) KanbanColumn {
-	return a.kanbanData.Columns[columnId]
-}
-
-func (a *App) SaveKanbanCard(content string) uint64 {
+func (a *App) PushAndSaveKanbanCard(title string, columnId string) uint64 {
 	cardId := a.kanbanData.NextCardId
-	a.kanbanData.Cards[cardId] = content
-	firstCol := a.kanbanData.Columns[1] // this is a map key, not an index
-	firstCol.CardIds = append(firstCol.CardIds, cardId)
-	a.kanbanData.Columns[1] = firstCol
+	card := KanbanCard{Id: strconv.FormatUint(cardId, 10), Title: title, ColumnId: columnId}
+	a.kanbanData.Cards = append(a.kanbanData.Cards, card)
 	a.kanbanData.NextCardId += 1
 
 	a.saveKanbanData()
@@ -469,30 +438,12 @@ func (a *App) SaveKanbanCard(content string) uint64 {
 	return cardId
 }
 
-type KanbanCardMap map[uint64]string
-
-func (a *App) GetKanbanCard(cardId uint64) string {
-	return a.kanbanData.Cards[cardId]
+type KanbanCard struct {
+	Id       string `json:"id"`
+	Title    string `json:"title"`
+	ColumnId string `json:"columnId"`
 }
 
-func (a *App) GetAllKanbanCards() KanbanCardMap {
+func (a *App) GetAllKanbanCards() []KanbanCard {
 	return a.kanbanData.Cards
-}
-
-func (a *App) SaveKanbanColumns(columns map[string]KanbanColumn) {
-	// Parse frontend data so it's compatible
-	newColumnMap := make(KanbanColumnMap)
-	for k, v := range columns {
-		newK, err := strconv.ParseUint(k, 10, 64)
-		if err != nil {
-			log.Fatal(err)
-		}
-		newColumnMap[newK] = v
-	}
-
-	// Set the data in memory (for the backend)
-	a.kanbanData.Columns = newColumnMap
-	
-	// // Save to disk
-	a.saveKanbanData()
 }

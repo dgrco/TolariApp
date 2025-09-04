@@ -36,18 +36,20 @@ export namespace main {
 	        this.review_date = source["review_date"];
 	    }
 	}
-	export class KanbanColumn {
+	export class KanbanCard {
+	    id: string;
 	    title: string;
-	    cardIds: number[];
+	    columnId: string;
 	
 	    static createFrom(source: any = {}) {
-	        return new KanbanColumn(source);
+	        return new KanbanCard(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
 	        this.title = source["title"];
-	        this.cardIds = source["cardIds"];
+	        this.columnId = source["columnId"];
 	    }
 	}
 

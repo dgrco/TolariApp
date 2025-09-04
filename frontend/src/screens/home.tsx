@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FlashcardContext } from "../contexts/FlashcardContext";
 import Flashcard from "../components/Flashcard";
 import { main } from "../../wailsjs/go/models";
+import { motion } from "framer-motion";
 
 // No more styles.css file, all styling is handled with Tailwind.
 export default function HomePage() {
@@ -21,7 +22,11 @@ export default function HomePage() {
   const svgSize = "1.5rem";
 
   return (
-    <div className="flex flex-col justify-between h-screen text-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col justify-between h-screen text-center"
+    >
       <div className="flex justify-between items-center m-4">
         <div className="h-9 w-9"></div>
         <div className="flex justify-around w-1/3 bg-dark-secondary rounded-full">
@@ -68,7 +73,7 @@ export default function HomePage() {
             (
               <div
                 key={cardIndex}
-                className="animate-popIn origin-center"
+                className="origin-center"
               >
                 <Flashcard card={cardCtx.flashcards[cardMapKeys.current[cardIndex]]} />
               </div>
@@ -113,6 +118,6 @@ export default function HomePage() {
         }
       `}
       </style>
-    </div>
+    </motion.div>
   );
 }

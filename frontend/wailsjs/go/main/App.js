@@ -10,20 +10,8 @@ export function GetAllKanbanCards() {
   return window['go']['main']['App']['GetAllKanbanCards']();
 }
 
-export function GetAllKanbanColumns() {
-  return window['go']['main']['App']['GetAllKanbanColumns']();
-}
-
 export function GetCurrentDateString() {
   return window['go']['main']['App']['GetCurrentDateString']();
-}
-
-export function GetKanbanCard(arg1) {
-  return window['go']['main']['App']['GetKanbanCard'](arg1);
-}
-
-export function GetKanbanColumn(arg1) {
-  return window['go']['main']['App']['GetKanbanColumn'](arg1);
 }
 
 export function GetReviewCards() {
@@ -42,6 +30,10 @@ export function NewConfig() {
   return window['go']['main']['App']['NewConfig']();
 }
 
+export function PushAndSaveKanbanCard(arg1, arg2) {
+  return window['go']['main']['App']['PushAndSaveKanbanCard'](arg1, arg2);
+}
+
 export function ReviewCard(arg1, arg2) {
   return window['go']['main']['App']['ReviewCard'](arg1, arg2);
 }
@@ -52,12 +44,4 @@ export function SaveConfig(arg1) {
 
 export function SaveFlashcard(arg1, arg2) {
   return window['go']['main']['App']['SaveFlashcard'](arg1, arg2);
-}
-
-export function SaveKanbanCard(arg1) {
-  return window['go']['main']['App']['SaveKanbanCard'](arg1);
-}
-
-export function SaveKanbanColumns(arg1) {
-  return window['go']['main']['App']['SaveKanbanColumns'](arg1);
 }

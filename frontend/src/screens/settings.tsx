@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Dropdown from '../components/dropdown';
 import { SettingsContext } from '../contexts/SettingsContext';
 import { SaveConfig } from "../../wailsjs/go/main/App";
+import { motion } from "framer-motion";
 
 export default function SettingsPage() {
   const settingsCtx = useContext(SettingsContext);
@@ -14,9 +15,13 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-dark p-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col h-screen bg-dark p-4"
+    >
       <div className="flex justify-start mb-4">
-        <Link to="/" className="p-2 p-2 w-10 h-10 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
+        <Link to="/" className="p-2 w-10 h-10 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
           &#8592;
         </Link>
       </div>
@@ -50,6 +55,6 @@ export default function SettingsPage() {
           End of Settings
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

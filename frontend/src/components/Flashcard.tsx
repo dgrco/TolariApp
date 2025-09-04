@@ -1,5 +1,6 @@
 import { main } from "../../wailsjs/go/models";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface IProps {
   card: main.Flashcard;
@@ -13,9 +14,13 @@ export default function Flashcard(props: IProps) {
   }
 
   return (
-    <>
-      <div
-        className="flex flex-col bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] justify-center items-center rounded-2xl transition-all duration-200 ease-in-out hover:scale-[101%] hover:bg-dark-secondary-hover cursor-pointer active:scale-100"
+    <AnimatePresence>
+      <motion.div
+        initial={{opacity: 0, y: 50}}
+        animate={{opacity: 1, y: 0}}
+        whileHover={{scale: 1.02}}
+        whileTap={{scale: 1}}
+        className="flex flex-col bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] justify-center items-center rounded-2xl cursor-pointer"
         onClick={handleFlip}
       >
         <textarea
@@ -26,7 +31,7 @@ export default function Flashcard(props: IProps) {
         <p className="opacity-60 text-white mb-4">
           ({showFront ? "front" : "back"})
         </p>
-      </div>
-    </>
+      </motion.div>
+    </AnimatePresence>
   );
 }
