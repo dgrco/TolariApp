@@ -38,7 +38,7 @@ export namespace main {
 	}
 	export class KanbanCard {
 	    id: string;
-	    title: string;
+	    content: string;
 	    columnId: string;
 	
 	    static createFrom(source: any = {}) {
@@ -48,8 +48,22 @@ export namespace main {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
-	        this.title = source["title"];
+	        this.content = source["content"];
 	        this.columnId = source["columnId"];
+	    }
+	}
+	export class KanbanColumn {
+	    id: string;
+	    title: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new KanbanColumn(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.title = source["title"];
 	    }
 	}
 

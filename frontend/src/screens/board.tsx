@@ -1,42 +1,138 @@
 import { Link } from "react-router-dom";
-import Column from "../components/KanbanComponents/Column";
-import { useEffect, useRef, useState } from "react";
+import ColumnContainer from "../components/KanbanComponents/ColumnContainer";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Modal from "../components/Modal";
 import { main } from "../../wailsjs/go/models";
-import { GetAllKanbanCards, PushAndSaveKanbanCard } from "../../wailsjs/go/main/App";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "../components/KanbanComponents/Card";
+import { Column, Task } from "../types";
+import { closestCorners, DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { SortableContext } from "@dnd-kit/sortable";
+import { createPortal } from "react-dom";
+import { GetKanbanCards, GetKanbanColumns } from "../../wailsjs/go/main/App";
+import { TaskCard } from "../components/KanbanComponents/TaskCard";
 
 export default function Board() {
-  const [cards, setCards] = useState<main.KanbanCard[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [showModal, setShowModal] = useState(false);
 
-  const columns = [{ id: 'todo', title: "To-Do" }, { id: 'in_progress', title: "In Progress" }, { id: 'done', title: "Done" }];
+  const [columns, setColumns] = useState<Column[]>([]);
+  const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const columnIds = useMemo(() => columns.map(col => col.id), [columns]);
 
-  const [loading, setLoading] = useState(true);
-  const newTask = useRef<HTMLInputElement>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 3, // 3 px
+      }
+    })
+  )
 
   useEffect(() => {
     (async () => {
-      const cardsData = await GetAllKanbanCards();
+      // Load columns
+      const columns = await GetKanbanColumns();
+      setColumns(columns);
 
-      setCards(cardsData);
+      // Load cards
+      const cards = await GetKanbanCards();
+      setTasks(cards);
+
       setLoading(false);
     })();
   }, [])
 
   const addCard = async () => {
-    if (newTask.current) {
-      const newCardContent = newTask.current.value;
-      const newCardId = await PushAndSaveKanbanCard(newCardContent, 'todo');
-      setCards([
-        ...cards,
-        main.KanbanCard.createFrom(
-          { id: newCardId, title: newCardContent, columnId: 'todo' }
-        )
-      ]);
+  }
+
+  function moveItem<T>(items: T[], from: number, to: number): T[] {
+    const updated = [...items];
+    console.log("MOVE FROM " + from + " to " + to)
+    console.log("PRIOR: ", [...updated])
+    const [movedItem] = updated.splice(from, 1);
+    console.log("SPLICE: ", movedItem, [...updated])
+    const adjustedTo = from < to ? to - 1 : to;
+    updated.splice(adjustedTo, 0, movedItem);
+    console.log("AFTER: ", [...updated])
+    return updated;
+  }
+
+  const onDragStart = (event: DragStartEvent) => {
+    if (event.active.data.current?.type === "Column") {
+      setActiveColumn(event.active.data.current.column);
+      return;
     }
-    setShowModal(false);
+
+    if (event.active.data.current?.type === "Task") {
+      setActiveTask(event.active.data.current.task);
+      return;
+    }
+  }
+
+  const onDragEnd = (event: DragEndEvent) => {
+    setActiveColumn(null);
+    setActiveTask(null);
+
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    if (active.data.current?.type === "Column") {
+      setColumns(columns => {
+        const activeColumnIndex = columns.findIndex(col => col.id === activeId);
+        const overColumnIndex = columns.findIndex(col => col.id === overId);
+
+        return moveItem(columns, activeColumnIndex, overColumnIndex);
+      })
+    }
+  }
+
+  const onDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    const isActiveATask = active.data.current?.type === "Task";
+    const isOverATask = over.data.current?.type === "Task";
+
+    if (!isActiveATask) return;
+
+    // Dropping a task over another task
+    if (isActiveATask && isOverATask) {
+      setTasks(tasks => {
+        const activeIndex = tasks.findIndex(task => task.id === active.id);
+        const overIndex = tasks.findIndex(task => task.id === over.id);
+
+        tasks[activeIndex].columnId = tasks[overIndex].columnId;
+
+        return moveItem(tasks, activeIndex, overIndex);
+      })
+    }
+
+    const isOverAColumn = over.data.current?.type === "Column";
+
+    // Dropping a task over a column
+    if (isActiveATask && isOverAColumn) {
+      setTasks(tasks => {
+        const activeIndex = tasks.findIndex(task => task.id === active.id);
+
+        tasks[activeIndex].columnId = overId as string;
+
+        return moveItem(tasks, activeIndex, activeIndex);
+      })
+    }
+
   }
 
   return (
@@ -62,45 +158,46 @@ export default function Board() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="flex flex-col h-screen pb-5 overflow-scroll">
+          <div className="flex flex-col h-screen">
             <div className="flex justify-between p-4">
               <Link to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200 select-none">
                 &#8592;
               </Link>
-              <button
-                onClick={() => setShowModal(true)}
-                className="h-10 w-16 text-xs font-semibold rounded-full bg-gradient-to-r from-primary to-secondary hover:opacity-85 transition-opacity ease duration-200 select-none"
-              >
-                + Add
-              </button>
             </div>
-            <AnimatePresence>
-              {showModal &&
-                <Modal onClose={() => setShowModal(false)}>
-                  <span className="text-lg">Add Task</span>
-                  <input autoFocus type="text" ref={newTask} className="p-2 rounded-md bg-dark-secondary-hover text-white border-2 border-gray-600 focus:outline-none focus:border-primary" />
-                  <button
-                    className="h-10 w-24 text-xs font-semibold rounded-full bg-gradient-to-r from-primary to-secondary hover:opacity-85 transition-opacity ease duration-200 mx-auto select-none"
-                    onClick={addCard}
-                  >
-                    Add
-                  </button>
-                </Modal>
-              }
-            </AnimatePresence>
-            <div
-              className="flex flex-1 gap-8 mx-8"
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              onDragOver={onDragOver}
             >
-              {columns.map((column) => (
-                <Column
-                  key={column.id}
-                  id={column.id}
-                  title={column.title}
-                  setCards={setCards}
-                  cards={cards}
-                />
-              ))}
-            </div>
+              <div className="flex flex-1 gap-8 px-8 overflow-x-auto">
+                <SortableContext items={columnIds}>
+                  {/* Render columns */}
+                  {columns.map(col => (
+                    <ColumnContainer
+                      key={col.id}
+                      column={col}
+                      tasks={tasks.filter(task => task.columnId === col.id)}
+                    />
+                  ))}
+                </SortableContext>
+              </div>
+              {createPortal(
+                <DragOverlay>
+                  {activeColumn && (
+                    <ColumnContainer
+                      column={activeColumn}
+                      tasks={tasks.filter(task => task.columnId === activeColumn.id)}
+                    />
+                  )}
+                  {
+                    activeTask && <TaskCard task={activeTask} />
+                  }
+                </DragOverlay>,
+                document.body
+              )}
+            </DndContext>
           </div>
         </motion.div>
       )}

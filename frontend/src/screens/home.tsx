@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { FlashcardContext } from "../contexts/FlashcardContext";
 import Flashcard from "../components/Flashcard";
 import { main } from "../../wailsjs/go/models";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 // No more styles.css file, all styling is handled with Tailwind.
 export default function HomePage() {
@@ -69,17 +69,14 @@ export default function HomePage() {
               <span>&#8592;</span>
             </button>
           }
-          {cardIndex !== null ?
-            (
-              <div
-                key={cardIndex}
-                className="origin-center"
-              >
-                <Flashcard card={cardCtx.flashcards[cardMapKeys.current[cardIndex]]} />
-              </div>
-            ) :
-            <p>No Cards to Display</p>
-          }
+          <AnimatePresence mode="wait">
+            {cardIndex !== null ?
+              (
+                <Flashcard key={cardIndex} card={cardCtx.flashcards[cardMapKeys.current[cardIndex]]} />
+              ) :
+              <p>No Cards to Display</p>
+            }
+          </AnimatePresence>
           {cardMapKeys.current.length > 1 &&
             <button
               className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200"

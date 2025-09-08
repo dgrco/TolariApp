@@ -4,9 +4,11 @@ import {main} from '../models';
 
 export function GetAllFlashcards():Promise<main.FlashcardMap>;
 
-export function GetAllKanbanCards():Promise<Array<main.KanbanCard>>;
-
 export function GetCurrentDateString():Promise<string>;
+
+export function GetKanbanCards():Promise<Array<main.KanbanCard>>;
+
+export function GetKanbanColumns():Promise<Array<main.KanbanColumn>>;
 
 export function GetReviewCards():Promise<Array<main.Flashcard>>;
 
@@ -16,10 +18,14 @@ export function LoadConfig():Promise<void>;
 
 export function NewConfig():Promise<void>;
 
-export function PushAndSaveKanbanCard(arg1:string,arg2:string):Promise<number>;
-
 export function ReviewCard(arg1:number,arg2:number):Promise<main.Flashcard>;
+
+export function SaveAllKanbanData(arg1:Array<main.KanbanCard>,arg2:Array<main.KanbanColumn>):Promise<void>;
+
+export function SaveColumn(arg1:string):Promise<void>;
 
 export function SaveConfig(arg1:main.AppSettings):Promise<void>;
 
 export function SaveFlashcard(arg1:string,arg2:string):Promise<main.Flashcard>;
+
+export function SaveKanbanCard(arg1:string,arg2:string):Promise<void>;

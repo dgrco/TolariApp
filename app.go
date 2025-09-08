@@ -23,8 +23,10 @@ type AppSettings struct {
 }
 
 type KanbanDataFile struct {
-	Cards      []KanbanCard `json:"cards"`
-	NextCardId uint64       `json:"nextCardId"`
+	Columns      []KanbanColumn `json:"columns"`
+	Cards        []KanbanCard   `json:"cards"`
+	NextCardId   uint64         `json:"nextCardId"`
+	NextColumnId uint64         `json:"nextColumnId"`
 }
 
 // App struct
@@ -56,8 +58,20 @@ func (a *App) startup(ctx context.Context) {
 	_, err = os.Stat(kanbanStatePath)
 	if errors.Is(err, os.ErrNotExist) { // Initialize the data file
 		initialState := KanbanDataFile{
-			Cards:      []KanbanCard{},
+			Cards:      []KanbanCard{
+				{Id: "card-1", Content: "Test 1", ColumnId: "column-1"},
+				{Id: "card-2", Content: "Test 2", ColumnId: "column-1"},
+				{Id: "card-3", Content: "Test 3", ColumnId: "column-1"},
+				{Id: "card-4", Content: "Test 4", ColumnId: "column-2"},
+				{Id: "card-5", Content: "Test 5", ColumnId: "column-2"},
+			},
+			Columns: []KanbanColumn{
+				{Id: "column-1", Title: "To-Do"},
+				{Id: "column-2", Title: "In Progress"},
+				{Id: "column-3", Title: "Done"},
+			},
 			NextCardId: 1,
+			NextColumnId: 1,
 		}
 		marshalledState, err := json.Marshal(initialState)
 		if err != nil {
@@ -406,6 +420,20 @@ func (a *App) GetReviewCards() ([]Flashcard, error) {
 ////////////////////////////////
 //			 Kanban
 ////////////////////////////////
+// NOTE: All Kanban Storage will be placed in a separate json file (kanban-state.json)
+// to match the in-memory representation for simplicity and efficiency.
+// For now, the SQL DB will only be for flashcards.
+
+type KanbanColumn struct {
+	Id    string `json:"id"`
+	Title string `json:"title"`
+}
+
+type KanbanCard struct {
+	Id       string `json:"id"`
+	Content  string `json:"content"`
+	ColumnId string `json:"columnId"`
+}
 
 func (a *App) saveKanbanData() {
 	dataPath, err := a.getDataPath()
@@ -423,27 +451,41 @@ func (a *App) saveKanbanData() {
 	}
 }
 
-// NOTE: All Kanban Storage will be placed in a separate json file (kanban-state.json)
-// to match the in-memory representation for simplicity and efficiency.
-// For now, the SQL DB will only be for flashcards.
-
-func (a *App) PushAndSaveKanbanCard(title string, columnId string) uint64 {
+func (a *App) SaveKanbanCard(title string, columnId string) {
 	cardId := a.kanbanData.NextCardId
-	card := KanbanCard{Id: strconv.FormatUint(cardId, 10), Title: title, ColumnId: columnId}
+	card := KanbanCard{
+		Id:       strconv.FormatUint(cardId, 10),
+		Content:  title,
+		ColumnId: columnId,
+	}
 	a.kanbanData.Cards = append(a.kanbanData.Cards, card)
 	a.kanbanData.NextCardId += 1
 
 	a.saveKanbanData()
-
-	return cardId
 }
 
-type KanbanCard struct {
-	Id       string `json:"id"`
-	Title    string `json:"title"`
-	ColumnId string `json:"columnId"`
+func (a *App) SaveColumn(title string) {
+	columnId := a.kanbanData.NextColumnId
+	column := KanbanColumn{
+		Id: "column-" + strconv.FormatUint(columnId, 10),
+		Title: title,
+	}
+	a.kanbanData.Columns = append(a.kanbanData.Columns, column)
+	a.kanbanData.NextColumnId += 1
+
+	a.saveKanbanData()
 }
 
-func (a *App) GetAllKanbanCards() []KanbanCard {
+func (a *App) GetKanbanCards() []KanbanCard {
 	return a.kanbanData.Cards
+}
+
+func (a *App) GetKanbanColumns() []KanbanColumn {
+	return a.kanbanData.Columns
+}
+
+func (a *App) SaveAllKanbanData(cards []KanbanCard, columns []KanbanColumn) {
+	a.kanbanData.Cards = cards
+	a.kanbanData.Columns = columns
+	a.saveKanbanData()
 }
