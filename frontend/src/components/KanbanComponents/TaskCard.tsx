@@ -55,7 +55,7 @@ const TaskCardComponent = (props: Props) => {
         key={id}
         ref={ref}
         style={style}
-        className="flex flex-1 items-center justify-center bg-neutral-700 break-all rounded-md border-2 border-secondary touch-none select-none cursor-text transition-all"
+        className="flex flex-1 items-center justify-center bg-neutral-700 rounded-md border-2 border-secondary touch-none select-none cursor-text transition-all"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -65,10 +65,10 @@ const TaskCardComponent = (props: Props) => {
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              whileHover={{ opacity: 0.85 }}
+              whileHover={{ boxShadow: "inset 0 0 10px 100px rgba(0, 0, 0, 0.1)" }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.1 }}
-              className="cursor-pointer absolute top-1 right-1 bg-success p-1.5 rounded-lg"
+              className="cursor-pointer absolute top-0 -translate-y-1/3 right-0 translate-x-1/3 bg-success p-2 rounded-lg"
               onClick={() => {
                 // Save the card
                 onUpdate(id, contentRef)
@@ -81,7 +81,7 @@ const TaskCardComponent = (props: Props) => {
         </AnimatePresence>
         <div
           ref={contentRef}
-          className="w-full outline-none p-4"
+          className="w-full outline-none px-6 py-4 break-words [overflow-wrap:anywhere]"
           contentEditable
           onInput={() => {
             if (contentRef.current) {
@@ -110,7 +110,7 @@ const TaskCardComponent = (props: Props) => {
       key={id}
       ref={ref}
       style={style}
-      className="flex items-center justify-center bg-neutral-700 break-all rounded-md border-2 border-neutral-600 touch-none select-none cursor-grab transition-all"
+      className="flex items-center justify-center bg-neutral-700 rounded-md border-2 border-neutral-600 touch-none select-none cursor-grab transition-all"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -120,10 +120,10 @@ const TaskCardComponent = (props: Props) => {
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            whileHover={{ opacity: 0.85 }}
+            whileHover={{ boxShadow: "inset 0 0 10px 100px rgba(0, 0, 0, 0.1)" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="cursor-pointer absolute top-1 right-1 bg-secondary p-1.5 rounded-lg"
+            className="cursor-pointer absolute top-0 -translate-y-1/3 left-0 -translate-x-1/3 bg-secondary p-2 rounded-lg"
             onClick={() => {
               setEditMode(true)
             }}
@@ -133,11 +133,11 @@ const TaskCardComponent = (props: Props) => {
         }
       </AnimatePresence>
       {content.trim() === "" ? (
-        <div className="whitespace-pre-line p-4 text-blue-300">
+        <div className="whitespace-pre-line px-6 py-4 text-blue-300">
           (empty)
         </div>
       ) : (
-        <div className="whitespace-pre-line p-4">
+        <div className="whitespace-pre-line px-6 py-4 break-words [overflow-wrap:anywhere]">
           {content}
         </div>
       )
@@ -148,10 +148,10 @@ const TaskCardComponent = (props: Props) => {
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            whileHover={{ opacity: 0.85 }}
+            whileHover={{ boxShadow: "inset 0 0 10px 100px rgba(0, 0, 0, 0.1)" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="cursor-pointer absolute top-1 left-1 bg-error p-1.5 rounded-lg"
+            className="cursor-pointer absolute top-0 -translate-y-1/3 right-0 translate-x-1/3 bg-error p-2 rounded-lg"
             onClick={() => onDelete(id)}
           >
             <TrashIcon />
@@ -166,17 +166,17 @@ export const TaskCard = React.memo(TaskCardComponent);
 
 const EditIcon = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pencil-icon lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /><path d="m15 5 4 4" /></svg>
   )
 }
 const CheckIcon = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5" /></svg>
   )
 }
 
 const TrashIcon = () => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-icon lucide-trash"><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
   )
 }

@@ -24,7 +24,7 @@ export default function Review() {
   return (
     <div className="flex flex-col h-screen p-6 bg-dark">
       <div className="flex justify-start">
-        <Link to="/" className="px-4 py-2 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
+        <Link to="/" className="select-none px-4 py-2 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
           &#8592;
           <span className="ml-2">Exit Review</span>
         </Link>
@@ -45,7 +45,7 @@ export default function Review() {
             <p className="text-lg text-muted text-center mt-auto mb-4">How well did you recall this?</p>
             <div className="w-full flex justify-center gap-4 mb-8">
               <button
-                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-error hover:border-error"
+                className="select-none w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-error hover:border-error"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
@@ -58,7 +58,7 @@ export default function Review() {
                   }
                 }}>Fail</button>
               <button
-                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-warning hover:border-warning"
+                className="select-none w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-warning hover:border-warning"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
@@ -71,7 +71,7 @@ export default function Review() {
                   }
                 }}>Hard</button>
               <button
-                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-secondary hover:border-secondary"
+                className="select-none w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-secondary hover:border-secondary"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;
@@ -84,7 +84,7 @@ export default function Review() {
                   }
                 }}>Fair</button>
               <button
-                className="w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-success hover:border-success"
+                className="select-none w-28 h-10 tracking-wide rounded-full border border-border transition-colors duration-200 hover:bg-success hover:border-success"
                 onClick={async () => {
                   if (reviewCardIndex !== null) {
                     const cardID = reviewCards[reviewCardIndex].id;

@@ -40,7 +40,7 @@ export default function ColumnContainer(props: Props) {
         ref={ref}
         style={style}
         className="flex flex-col bg-dark-secondary rounded-ee-xl rounded-es-xl transition-opacity max-h-full overflow-y-scroll">
-        <div className="flex flex-col gap-3 px-8 py-10">
+        <div className="flex flex-col gap-3 px-8 py-6">
           {children}
         </div>
       </div>

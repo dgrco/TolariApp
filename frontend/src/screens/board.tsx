@@ -127,9 +127,13 @@ export default function Board() {
         >
           <DragDropProvider
             onDragOver={(event) => {
-              const modifiedColumns = move(columns, event);
-              setColumns(modifiedColumns)
-              saveData(tasks, modifiedColumns, columnTitles);
+              setColumns((prev) => move(prev, event));
+            }}
+            onDragEnd={(_) => {
+              setColumns((prev) => {
+                saveData(tasks, prev, columnTitles);
+                return prev;
+              });
             }}
           >
             <div className="flex flex-col max-h-screen">
@@ -160,7 +164,7 @@ export default function Board() {
                           />
                         ))}
                         <button
-                          className="appearance-none w-full border-2 border-primary rounded-md p-1 hover:bg-primary hover:border-primary text-md opacity-80 hover:opacity-100 transition-all"
+                          className="select-none appearance-none w-full border-2 border-primary rounded-md p-1 hover:bg-primary hover:border-primary text-md opacity-80 hover:opacity-100 transition-all"
                           onClick={async () => {
                             const newTaskId = await SaveKanbanCard("", colId);
                             setTasks((prevTasks) => {
