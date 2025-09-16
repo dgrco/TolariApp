@@ -66,7 +66,7 @@ export default function Board() {
 
   const deleteCard = (taskId: string) => {
     const modifiedTasks = Object.fromEntries(Object.entries(tasks).filter(([tid, _]) => tid !== taskId));
-    setTasks(tasks);
+    setTasks(modifiedTasks);
 
     const colFindRes = columnFind(taskId);
     if (colFindRes === null) return;
@@ -91,7 +91,7 @@ export default function Board() {
       if (!contentRef.current) return tasks;
       return {
         ...tasks,
-        [taskId]: contentRef.current.innerText,
+        [taskId]: contentRef.current.innerText.trim(),
       }
     }
 

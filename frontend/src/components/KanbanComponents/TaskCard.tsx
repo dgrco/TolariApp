@@ -55,7 +55,7 @@ const TaskCardComponent = (props: Props) => {
         key={id}
         ref={ref}
         style={style}
-        className="flex flex-1 p-4 items-center justify-center bg-neutral-700 break-all rounded-md border-2 border-secondary touch-none select-none cursor-grab transition-all"
+        className="flex flex-1 items-center justify-center bg-neutral-700 break-all rounded-md border-2 border-secondary touch-none select-none cursor-text transition-all"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -81,7 +81,7 @@ const TaskCardComponent = (props: Props) => {
         </AnimatePresence>
         <div
           ref={contentRef}
-          className="w-full"
+          className="w-full outline-none p-4"
           contentEditable
           onInput={() => {
             if (contentRef.current) {
@@ -110,7 +110,7 @@ const TaskCardComponent = (props: Props) => {
       key={id}
       ref={ref}
       style={style}
-      className="flex p-4 items-center justify-center bg-neutral-700 break-all rounded-md border-2 border-neutral-600 touch-none select-none cursor-grab transition-all"
+      className="flex items-center justify-center bg-neutral-700 break-all rounded-md border-2 border-neutral-600 touch-none select-none cursor-grab transition-all"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -132,9 +132,16 @@ const TaskCardComponent = (props: Props) => {
           </motion.span>
         }
       </AnimatePresence>
-      <div className="whitespace-pre-line">
-        {content}
-      </div>
+      {content.trim() === "" ? (
+        <div className="whitespace-pre-line p-4 text-blue-300">
+          (empty)
+        </div>
+      ) : (
+        <div className="whitespace-pre-line p-4">
+          {content}
+        </div>
+      )
+      }
       <AnimatePresence>
         {
           hovered &&
