@@ -1,41 +1,34 @@
 import { Link } from "react-router-dom";
 import ColumnContainer from "../components/KanbanComponents/ColumnContainer";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Ref, useEffect, useMemo, useRef, useState } from "react";
 import Modal from "../components/Modal";
 import { main } from "../../wailsjs/go/models";
 import { motion, AnimatePresence } from "framer-motion";
-import { Column, Task } from "../types";
-import { closestCorners, DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
-import { createPortal } from "react-dom";
-import { GetKanbanCards, GetKanbanColumns } from "../../wailsjs/go/main/App";
+import { GetKanbanCards, GetKanbanColumns, GetKanbanColumnTitles, SaveAllKanbanData, SaveKanbanCard } from "../../wailsjs/go/main/App";
 import { TaskCard } from "../components/KanbanComponents/TaskCard";
+import { DragDropProvider } from '@dnd-kit/react';
+import { move } from '@dnd-kit/helpers';
+import { Columns, ColumnTitles, Tasks } from "../types";
+import { VariableSizeList as List } from 'react-window';
 
 export default function Board() {
   const [loading, setLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
 
-  const [columns, setColumns] = useState<Column[]>([]);
-  const [activeColumn, setActiveColumn] = useState<Column | null>(null);
-  const columnIds = useMemo(() => columns.map(col => col.id), [columns]);
-
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 3, // 3 px
-      }
-    })
-  )
+  const [columns, setColumns] = useState<Columns>({});
+  const [columnTitles, setColumnTitles] = useState<ColumnTitles>({});
+  const [tasks, setTasks] = useState<Tasks>({});
 
   useEffect(() => {
     (async () => {
       // Load columns
       const columns = await GetKanbanColumns();
       setColumns(columns);
+
+      // Load column titles
+      const columnTitles = await GetKanbanColumnTitles();
+      setColumnTitles(columnTitles);
 
       // Load cards
       const cards = await GetKanbanCards();
@@ -45,94 +38,68 @@ export default function Board() {
     })();
   }, [])
 
-  const addCard = async () => {
+  const saveData = (tasks: Tasks, columns: Columns, columnTitles: ColumnTitles) => {
+    if (loading) return;
+
+    (async () => {
+      try {
+        await SaveAllKanbanData(tasks, columns, columnTitles);
+      } catch (err) {
+        console.error(err);
+      }
+    })();
   }
 
-  function moveItem<T>(items: T[], from: number, to: number): T[] {
-    const updated = [...items];
-    console.log("MOVE FROM " + from + " to " + to)
-    console.log("PRIOR: ", [...updated])
-    const [movedItem] = updated.splice(from, 1);
-    console.log("SPLICE: ", movedItem, [...updated])
-    const adjustedTo = from < to ? to - 1 : to;
-    updated.splice(adjustedTo, 0, movedItem);
-    console.log("AFTER: ", [...updated])
-    return updated;
+  interface ColumnFindResult {
+    columnId: string;
+    taskIndex: number;
   }
 
-  const onDragStart = (event: DragStartEvent) => {
-    if (event.active.data.current?.type === "Column") {
-      setActiveColumn(event.active.data.current.column);
-      return;
-    }
+  const columnFind = (taskId: string): ColumnFindResult | null => {
+    const columnId = Object.keys(columns).find(colId => columns[colId].includes(taskId));
+    if (!columnId) return null;
+    const taskIndex = columns[columnId].findIndex(tid => tid === taskId);
+    if (taskIndex === -1) return null;
 
-    if (event.active.data.current?.type === "Task") {
-      setActiveTask(event.active.data.current.task);
-      return;
-    }
+    return { columnId, taskIndex }
   }
 
-  const onDragEnd = (event: DragEndEvent) => {
-    setActiveColumn(null);
-    setActiveTask(null);
+  const deleteCard = (taskId: string) => {
+    const modifiedTasks = Object.fromEntries(Object.entries(tasks).filter(([tid, _]) => tid !== taskId));
+    setTasks(tasks);
 
-    const { active, over } = event;
-    if (!over) return;
+    const colFindRes = columnFind(taskId);
+    if (colFindRes === null) return;
 
-    const activeId = active.id;
-    const overId = over.id;
+    const { columnId, taskIndex } = colFindRes;
 
-    if (activeId === overId) return;
-
-    if (active.data.current?.type === "Column") {
-      setColumns(columns => {
-        const activeColumnIndex = columns.findIndex(col => col.id === activeId);
-        const overColumnIndex = columns.findIndex(col => col.id === overId);
-
-        return moveItem(columns, activeColumnIndex, overColumnIndex);
-      })
+    const modifiedColumns: Columns = {
+      ...columns,
+      [columnId]: [
+        ...columns[columnId].slice(0, taskIndex),
+        ...columns[columnId].slice(taskIndex + 1, columns[columnId].length),
+      ]
     }
+
+    setColumns(modifiedColumns);
+
+    saveData(modifiedTasks, modifiedColumns, columnTitles);
   }
 
-  const onDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id;
-    const overId = over.id;
-
-    if (activeId === overId) return;
-
-    const isActiveATask = active.data.current?.type === "Task";
-    const isOverATask = over.data.current?.type === "Task";
-
-    if (!isActiveATask) return;
-
-    // Dropping a task over another task
-    if (isActiveATask && isOverATask) {
-      setTasks(tasks => {
-        const activeIndex = tasks.findIndex(task => task.id === active.id);
-        const overIndex = tasks.findIndex(task => task.id === over.id);
-
-        tasks[activeIndex].columnId = tasks[overIndex].columnId;
-
-        return moveItem(tasks, activeIndex, overIndex);
-      })
+  const updateCard = (taskId: string, contentRef: React.RefObject<HTMLDivElement>) => {
+    const updatedTaskFn = () => {
+      if (!contentRef.current) return tasks;
+      return {
+        ...tasks,
+        [taskId]: contentRef.current.innerText,
+      }
     }
 
-    const isOverAColumn = over.data.current?.type === "Column";
+    const modifiedTasks = updatedTaskFn();
 
-    // Dropping a task over a column
-    if (isActiveATask && isOverAColumn) {
-      setTasks(tasks => {
-        const activeIndex = tasks.findIndex(task => task.id === active.id);
+    setTasks(modifiedTasks);
 
-        tasks[activeIndex].columnId = overId as string;
-
-        return moveItem(tasks, activeIndex, activeIndex);
-      })
-    }
-
+    saveData(modifiedTasks, columns, columnTitles);
   }
 
   return (
@@ -158,47 +125,70 @@ export default function Board() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="flex flex-col h-screen">
-            <div className="flex justify-between p-4">
-              <Link to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200 select-none">
-                &#8592;
-              </Link>
-            </div>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCorners}
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              onDragOver={onDragOver}
-            >
-              <div className="flex flex-1 gap-8 px-8 overflow-x-auto">
-                <SortableContext items={columnIds}>
-                  {/* Render columns */}
-                  {columns.map(col => (
-                    <ColumnContainer
-                      key={col.id}
-                      column={col}
-                      tasks={tasks.filter(task => task.columnId === col.id)}
-                    />
-                  ))}
-                </SortableContext>
+          <DragDropProvider
+            onDragOver={(event) => {
+              const modifiedColumns = move(columns, event);
+              setColumns(modifiedColumns)
+              saveData(tasks, modifiedColumns, columnTitles);
+            }}
+          >
+            <div className="flex flex-col max-h-screen">
+              <div className="flex justify-between p-4">
+                <Link to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200 select-none">
+                  &#8592;
+                </Link>
               </div>
-              {createPortal(
-                <DragOverlay>
-                  {activeColumn && (
+              <div className="flex flex-1 gap-8 px-8 pb-4 overflow-y-auto">
+                {Object.entries(columnTitles).map(([colId, title]) => {
+                  return (
                     <ColumnContainer
-                      column={activeColumn}
-                      tasks={tasks.filter(task => task.columnId === activeColumn.id)}
-                    />
-                  )}
-                  {
-                    activeTask && <TaskCard task={activeTask} />
-                  }
-                </DragOverlay>,
-                document.body
-              )}
-            </DndContext>
-          </div>
+                      key={colId}
+                      id={colId}
+                      nChildren={columns[colId].length}
+                      title={title}
+                    >
+                      <>
+                        {columns[colId].map((tid, i) => (
+                          <TaskCard
+                            key={tid}
+                            id={tid}
+                            content={tasks[tid]}
+                            columnId={colId}
+                            index={i}
+                            onDelete={deleteCard}
+                            onUpdate={updateCard}
+                          />
+                        ))}
+                        <button
+                          className="appearance-none w-full border-2 border-primary rounded-md p-1 hover:bg-primary hover:border-primary text-md opacity-80 hover:opacity-100 transition-all"
+                          onClick={async () => {
+                            const newTaskId = await SaveKanbanCard("", colId);
+                            setTasks((prevTasks) => {
+                              return {
+                                ...prevTasks,
+                                [newTaskId]: "",
+                              }
+                            });
+                            setColumns((prevCols) => {
+                              return {
+                                ...prevCols,
+                                [colId]: [
+                                  ...columns[colId],
+                                  newTaskId,
+                                ]
+                              }
+                            })
+                          }}
+                        >
+                          + Add
+                        </button>
+                      </>
+                    </ColumnContainer>
+                  )
+                })}
+              </div>
+            </div>
+          </DragDropProvider>
         </motion.div>
       )}
     </AnimatePresence>

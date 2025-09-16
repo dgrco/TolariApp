@@ -14,6 +14,10 @@ export function GetKanbanCards() {
   return window['go']['main']['App']['GetKanbanCards']();
 }
 
+export function GetKanbanColumnTitles() {
+  return window['go']['main']['App']['GetKanbanColumnTitles']();
+}
+
 export function GetKanbanColumns() {
   return window['go']['main']['App']['GetKanbanColumns']();
 }
@@ -38,8 +42,8 @@ export function ReviewCard(arg1, arg2) {
   return window['go']['main']['App']['ReviewCard'](arg1, arg2);
 }
 
-export function SaveAllKanbanData(arg1, arg2) {
-  return window['go']['main']['App']['SaveAllKanbanData'](arg1, arg2);
+export function SaveAllKanbanData(arg1, arg2, arg3) {
+  return window['go']['main']['App']['SaveAllKanbanData'](arg1, arg2, arg3);
 }
 
 export function SaveColumn(arg1) {

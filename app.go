@@ -23,10 +23,11 @@ type AppSettings struct {
 }
 
 type KanbanDataFile struct {
-	Columns      []KanbanColumn `json:"columns"`
-	Cards        []KanbanCard   `json:"cards"`
-	NextCardId   uint64         `json:"nextCardId"`
-	NextColumnId uint64         `json:"nextColumnId"`
+	Columns      map[string][]string `json:"columns"`
+	ColumnTitles map[string]string   `json:"columnTitles"`
+	Cards        map[string]string   `json:"cards"`
+	NextCardId   uint64              `json:"nextCardId"`
+	NextColumnId uint64              `json:"nextColumnId"`
 }
 
 // App struct
@@ -58,19 +59,24 @@ func (a *App) startup(ctx context.Context) {
 	_, err = os.Stat(kanbanStatePath)
 	if errors.Is(err, os.ErrNotExist) { // Initialize the data file
 		initialState := KanbanDataFile{
-			Cards:      []KanbanCard{
-				{Id: "card-1", Content: "Test 1", ColumnId: "column-1"},
-				{Id: "card-2", Content: "Test 2", ColumnId: "column-1"},
-				{Id: "card-3", Content: "Test 3", ColumnId: "column-1"},
-				{Id: "card-4", Content: "Test 4", ColumnId: "column-2"},
-				{Id: "card-5", Content: "Test 5", ColumnId: "column-2"},
+			Cards: map[string]string{
+				"card-1": "Test 1",
+				"card-2": "Test 2",
+				"card-3": "Test 3",
+				"card-4": "Test 4",
+				"card-5": "Test 5",
 			},
-			Columns: []KanbanColumn{
-				{Id: "column-1", Title: "To-Do"},
-				{Id: "column-2", Title: "In Progress"},
-				{Id: "column-3", Title: "Done"},
+			Columns: map[string][]string{
+				"col-1": {"card-1", "card-2", "card-3"},
+				"col-2": {"card-4", "card-5"},
+				"col-3": {},
 			},
-			NextCardId: 1,
+			ColumnTitles: map[string]string{
+				"col-1": "To-Do",
+				"col-2": "In Progress",
+				"col-3": "Done",
+			},
+			NextCardId:   1,
 			NextColumnId: 1,
 		}
 		marshalledState, err := json.Marshal(initialState)
@@ -424,17 +430,6 @@ func (a *App) GetReviewCards() ([]Flashcard, error) {
 // to match the in-memory representation for simplicity and efficiency.
 // For now, the SQL DB will only be for flashcards.
 
-type KanbanColumn struct {
-	Id    string `json:"id"`
-	Title string `json:"title"`
-}
-
-type KanbanCard struct {
-	Id       string `json:"id"`
-	Content  string `json:"content"`
-	ColumnId string `json:"columnId"`
-}
-
 func (a *App) saveKanbanData() {
 	dataPath, err := a.getDataPath()
 	if err != nil {
@@ -451,41 +446,41 @@ func (a *App) saveKanbanData() {
 	}
 }
 
-func (a *App) SaveKanbanCard(title string, columnId string) {
-	cardId := a.kanbanData.NextCardId
-	card := KanbanCard{
-		Id:       strconv.FormatUint(cardId, 10),
-		Content:  title,
-		ColumnId: columnId,
-	}
-	a.kanbanData.Cards = append(a.kanbanData.Cards, card)
+func (a *App) SaveKanbanCard(content string, columnId string) string {
+	cardId := "card-" + strconv.FormatUint(a.kanbanData.NextCardId, 10)
+	a.kanbanData.Cards[cardId] = content
 	a.kanbanData.NextCardId += 1
+	a.kanbanData.Columns[columnId] = append(a.kanbanData.Columns[columnId], cardId)
 
 	a.saveKanbanData()
+	return cardId
 }
 
-func (a *App) SaveColumn(title string) {
-	columnId := a.kanbanData.NextColumnId
-	column := KanbanColumn{
-		Id: "column-" + strconv.FormatUint(columnId, 10),
-		Title: title,
-	}
-	a.kanbanData.Columns = append(a.kanbanData.Columns, column)
+func (a *App) SaveColumn(title string) string {
+	columnId := "col-" + strconv.FormatUint(a.kanbanData.NextColumnId, 10)
+	a.kanbanData.ColumnTitles[columnId] = title
+	a.kanbanData.Columns[columnId] = make([]string, 0)
 	a.kanbanData.NextColumnId += 1
 
 	a.saveKanbanData()
+	return columnId
 }
 
-func (a *App) GetKanbanCards() []KanbanCard {
+func (a *App) GetKanbanCards() map[string]string {
 	return a.kanbanData.Cards
 }
 
-func (a *App) GetKanbanColumns() []KanbanColumn {
+func (a *App) GetKanbanColumns() map[string][]string {
 	return a.kanbanData.Columns
 }
 
-func (a *App) SaveAllKanbanData(cards []KanbanCard, columns []KanbanColumn) {
+func (a *App) GetKanbanColumnTitles() map[string]string {
+	return a.kanbanData.ColumnTitles
+}
+
+func (a *App) SaveAllKanbanData(cards map[string]string, columns map[string][]string, columnTitles map[string]string) {
 	a.kanbanData.Cards = cards
 	a.kanbanData.Columns = columns
+	a.kanbanData.ColumnTitles = columnTitles
 	a.saveKanbanData()
 }
