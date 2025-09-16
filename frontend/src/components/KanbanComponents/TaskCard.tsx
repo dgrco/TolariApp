@@ -95,6 +95,8 @@ const TaskCardComponent = (props: Props) => {
               }
 
               event.preventDefault();
+              // Save the card
+              onUpdate(id, contentRef)
               setEditMode(false);
             }
           }}

@@ -59,16 +59,10 @@ func (a *App) startup(ctx context.Context) {
 	_, err = os.Stat(kanbanStatePath)
 	if errors.Is(err, os.ErrNotExist) { // Initialize the data file
 		initialState := KanbanDataFile{
-			Cards: map[string]string{
-				"card-1": "Test 1",
-				"card-2": "Test 2",
-				"card-3": "Test 3",
-				"card-4": "Test 4",
-				"card-5": "Test 5",
-			},
+			Cards: map[string]string{},
 			Columns: map[string][]string{
-				"col-1": {"card-1", "card-2", "card-3"},
-				"col-2": {"card-4", "card-5"},
+				"col-1": {},
+				"col-2": {},
 				"col-3": {},
 			},
 			ColumnTitles: map[string]string{
