@@ -26,8 +26,8 @@ export default function ColumnContainer(props: Props) {
 
   return (
     <div
-      className="flex flex-col justify-start flex-shrink-0 flex-grow-0 basis-[calc((100%-4rem)/3)] rounded-xl"
-    > {/* 100% - 4rem comes from wanting 3 columns shown by default with 2rem gaps each (=4rem) */}
+      className="flex flex-col justify-start flex-shrink-0 flex-grow-0 basis-[calc((100%-2rem)/3)] rounded-xl"
+    > {/* 100% - 2rem comes from wanting 3 columns shown by default with 1rem gaps each (=2rem) */}
       <div
         className="flex justify-between items-center rounded-t-xl p-4 bg-violet-900 select-none"
       >

@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"time"
+	"github.com/gen2brain/beeep"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -214,7 +215,10 @@ func (a *App) GetCurrentDateString() string {
 	return serializeDate(time.Now())
 }
 
-// Flashcard Definition
+////////////////////////////////
+//		   Flashcards
+////////////////////////////////
+
 type Flashcard struct {
 	ID          uint    `json:"id"`
 	Front       string  `json:"front"`
@@ -417,6 +421,48 @@ func (a *App) GetReviewCards() ([]Flashcard, error) {
 	return cards, nil
 }
 
+func (c *Flashcard) modify(front string, back string) {
+	c.Front = front
+	c.Back = back
+}
+
+func (a *App) ModifyFlashcard(cardID uint, front string, back string) error {
+	card, err := a.getCardByID(cardID)
+	if err != nil {
+		return err
+	}
+
+	card.modify(front, back)
+
+	_, err = a.db.Exec(`
+		UPDATE flashcards SET
+			front = ?,
+			back = ?
+		WHERE id = ?`,
+		card.Front,
+		card.Back,
+		card.ID,
+	)
+
+	return err
+}
+
+func (a *App) DeleteFlashcard(cardID uint) error {
+	card, err := a.getCardByID(cardID)
+	log.Println(card.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = a.db.Exec(`
+		DELETE FROM flashcards
+		WHERE id = ?`,
+		card.ID,
+	)
+
+	return err
+}
+
 ////////////////////////////////
 //			 Kanban
 ////////////////////////////////
@@ -477,4 +523,14 @@ func (a *App) SaveAllKanbanData(cards map[string]string, columns map[string][]st
 	a.kanbanData.Columns = columns
 	a.kanbanData.ColumnTitles = columnTitles
 	a.saveKanbanData()
+}
+
+////////////////////////////////
+//		  Notifications
+////////////////////////////////
+func (a *App) ShowNotification(title string, message string) {
+	err := beeep.Notify(title, message, "./frontend/src/assets/images/tungsten-logo.png")
+	if err != nil {
+		log.Fatal(err);
+	}
 }

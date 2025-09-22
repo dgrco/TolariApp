@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import { GetReviewCards, ReviewCard } from "../../wailsjs/go/main/App";
 import { main } from "../../wailsjs/go/models";
 import Flashcard from "../components/Flashcard";
+import TimerWidget from "../components/TimerWidget";
 import { FlashcardContext } from "../contexts/FlashcardContext";
+import { usePomodoroContext } from "../contexts/PomodoroContext";
 
 export default function Review() {
+  const pomodoroContext = usePomodoroContext();
   const cardCtx = useContext(FlashcardContext);
   const [reviewCards, setReviewCards] = useState<main.Flashcard[]>([]);
   const [reviewCardIndex, setReviewCardIndex] = useState<number | null>(null);
@@ -28,6 +31,12 @@ export default function Review() {
           &#8592;
           <span className="ml-2">Exit Review</span>
         </Link>
+        <div className="absolute top-1 right-1">
+          <TimerWidget
+            size={6} // in rem
+            embed={true}
+          />
+        </div>
       </div>
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="w-full flex items-center justify-center mb-8">
@@ -41,7 +50,7 @@ export default function Review() {
         </div>
         {
           reviewCardIndex !== null && reviewCardIndex < reviewCards.length &&
-          <div> 
+          <div>
             <p className="text-lg text-muted text-center mt-auto mb-4">How well did you recall this?</p>
             <div className="w-full flex justify-center gap-4 mb-8">
               <button

@@ -5,6 +5,7 @@ import App from './App'
 import { HashRouter } from 'react-router-dom'
 import { SettingsProvider } from './contexts/SettingsContext'
 import { FlashcardProvider } from './contexts/FlashcardContext'
+import { PomodoroProvider } from './contexts/PomodoroContext'
 
 const container = document.getElementById('root')
 
@@ -14,9 +15,11 @@ root.render(
   <React.StrictMode>
     <SettingsProvider>
       <FlashcardProvider>
-        <HashRouter>
-          <App />
-        </HashRouter>
+        <PomodoroProvider>
+          <HashRouter>
+            <App />
+          </HashRouter>
+        </PomodoroProvider>
       </FlashcardProvider>
     </SettingsProvider>
   </React.StrictMode>

@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import { useContext, useRef } from "react";
 import { SaveFlashcard } from "../../wailsjs/go/main/App";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FlashcardContext } from "../contexts/FlashcardContext";
 import { motion } from "framer-motion";
 
@@ -24,7 +23,7 @@ export default function AddPage() {
       </div>
       <div className="flex flex-col items-center justify-center flex-1">
         <span className="text-2xl mb-8">Add a new Flashcard</span>
-        <div className="flex flex-col w-full max-w-lg space-y-4">
+        <div className="flex flex-col w-full max-w-lg space-y-4 justify-between">
           <input
             className="w-full p-4 rounded-lg bg-dark-secondary placeholder-muted border-2 border-border focus:outline-none focus:border-primary-hover transition-colors duration-200"
             type="text"
@@ -38,25 +37,25 @@ export default function AddPage() {
             placeholder="Back"
             ref={backRef}
           />
-          <button
-            className="w-full py-2 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-semibold hover:opacity-80 transition-colors duration-200"
-            onClick={async () => {
-              try {
-                const flashcard = await SaveFlashcard(frontRef.current!.value, backRef.current!.value);
-                console.log(flashcard);
-                cardCtx.setFlashcards(prev => ({
-                  ...prev,
-                  [flashcard.id]: flashcard,
-                }));
-              } catch (err) {
-                console.error(err);
-              }
-              navigate('/');
-            }}
-          >
-            Add
-          </button>
         </div>
+        <button
+          className="flex items-center justify-center w-40 h-8 text-base p-1 mb-6 rounded-full bg-primary hover:opacity-85 transition-opacity duration-200 mt-10"
+          onClick={async () => {
+            try {
+              const flashcard = await SaveFlashcard(frontRef.current!.value, backRef.current!.value);
+              console.log(flashcard);
+              cardCtx.setFlashcards(prev => ({
+                ...prev,
+                [flashcard.id]: flashcard,
+              }));
+            } catch (err) {
+              console.error(err);
+            }
+            navigate('/');
+          }}
+        >
+          Add
+        </button>
       </div>
     </motion.div>
   );

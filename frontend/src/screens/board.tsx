@@ -10,8 +10,11 @@ import { DragDropProvider } from '@dnd-kit/react';
 import { move } from '@dnd-kit/helpers';
 import { Columns, ColumnTitles, Tasks } from "../types";
 import { VariableSizeList as List } from 'react-window';
+import TimerWidget from "../components/TimerWidget";
+import { usePomodoroContext } from "../contexts/PomodoroContext";
 
 export default function Board() {
+  const pomodoroContext = usePomodoroContext();
   const [loading, setLoading] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
@@ -141,8 +144,20 @@ export default function Board() {
                 <Link to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200 select-none">
                   &#8592;
                 </Link>
+                {/* <div className=""> */}
+                {/*   {pomodoroContext.loaded && */}
+                {/*     <TimerWidget */}
+                {/*       minutes={pomodoroContext.minutes} */}
+                {/*       seconds={pomodoroContext.seconds} */}
+                {/*       progress={pomodoroContext.getProgress()} */}
+                {/*       phase={pomodoroContext.phase} */}
+                {/*       size={4} // in rem */}
+                {/*       embed={true} */}
+                {/*     /> */}
+                {/*   } */}
+                {/* </div> */}
               </div>
-              <div className="flex flex-1 gap-8 px-8 pb-4 overflow-y-auto">
+              <div className="flex flex-1 gap-4 px-4 pb-4 overflow-y-auto">
                 {Object.entries(columnTitles).map(([colId, title]) => {
                   return (
                     <ColumnContainer
