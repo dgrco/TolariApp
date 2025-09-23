@@ -19,7 +19,7 @@ export default function Dropdown(props: IDropdownProps) {
       <select
         onChange={(element: React.ChangeEvent<HTMLSelectElement>) => props.onChange(element.target.value)}
         value={props.value}
-        className="w-full p-2 pr-8 text-base bg-transparent border-2 border-gray-600 rounded-md appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+        className="w-full p-2 pr-8 text-base bg-transparent border-2 border-border rounded-md appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
       >
         {props.options.map((option) => (
           <option key={option.value} value={option.value} className="bg-gray-800 text-gray-200">

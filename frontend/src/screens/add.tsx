@@ -43,7 +43,6 @@ export default function AddPage() {
           onClick={async () => {
             try {
               const flashcard = await SaveFlashcard(frontRef.current!.value, backRef.current!.value);
-              console.log(flashcard);
               cardCtx.setFlashcards(prev => ({
                 ...prev,
                 [flashcard.id]: flashcard,

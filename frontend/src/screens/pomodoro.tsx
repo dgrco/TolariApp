@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TimerWidget from "../components/TimerWidget";
 import { usePomodoroContext } from "../contexts/PomodoroContext";
 
@@ -66,6 +66,15 @@ export default function PomodoroTimer() {
             <SkipIcon />
           </button>
         </div>
+      </div>
+      <div className="fixed bottom-2 self-center text-slate-500">
+        You can adjust the duration of each phase in the 
+        <Link 
+          to="/settings#timer" 
+          className="underline pl-1"
+        >
+          settings
+        </Link>.
       </div>
     </motion.div>
   )

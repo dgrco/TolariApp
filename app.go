@@ -21,6 +21,12 @@ const APP_NAME = "Tungsten"
 
 type AppSettings struct {
 	UIZoom float32 `json:"zoom"`
+	TimerWorkMinutes uint `json:"timerWorkMinutes"`
+	TimerWorkSeconds uint `json:"timerWorkSeconds"`
+	TimerShortBreakMinutes uint `json:"timerShortBreakMinutes"`
+	TimerShortBreakSeconds uint `json:"timerShortBreakSeconds"`
+	TimerLongBreakMinutes uint `json:"timerLongBreakMinutes"`
+	TimerLongBreakSeconds uint `json:"timerLongBreakSeconds"`
 }
 
 type KanbanDataFile struct {
@@ -137,6 +143,12 @@ func (a *App) GetSettings() *AppSettings {
 func (a *App) NewConfig() {
 	a.settings = &AppSettings{
 		UIZoom: 1.0,
+		TimerWorkMinutes: 25,
+		TimerWorkSeconds: 0,
+		TimerShortBreakMinutes: 5,
+		TimerShortBreakSeconds: 0,
+		TimerLongBreakMinutes: 10,
+		TimerLongBreakSeconds: 0,
 	}
 }
 

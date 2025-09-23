@@ -2,6 +2,12 @@ export namespace main {
 	
 	export class AppSettings {
 	    zoom: number;
+	    timerWorkMinutes: number;
+	    timerWorkSeconds: number;
+	    timerShortBreakMinutes: number;
+	    timerShortBreakSeconds: number;
+	    timerLongBreakMinutes: number;
+	    timerLongBreakSeconds: number;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppSettings(source);
@@ -10,6 +16,12 @@ export namespace main {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.zoom = source["zoom"];
+	        this.timerWorkMinutes = source["timerWorkMinutes"];
+	        this.timerWorkSeconds = source["timerWorkSeconds"];
+	        this.timerShortBreakMinutes = source["timerShortBreakMinutes"];
+	        this.timerShortBreakSeconds = source["timerShortBreakSeconds"];
+	        this.timerLongBreakMinutes = source["timerLongBreakMinutes"];
+	        this.timerLongBreakSeconds = source["timerLongBreakSeconds"];
 	    }
 	}
 	export class Flashcard {

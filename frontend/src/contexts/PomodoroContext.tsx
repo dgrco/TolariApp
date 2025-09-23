@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ShowNotification } from "../../wailsjs/go/main/App";
+import { SettingsContext } from "./SettingsContext";
 
 interface PomodoroContextType {
   minutes: number;
@@ -28,15 +29,15 @@ export enum Phase {
 }
 
 export const PomodoroProvider = ({ children }: { children: React.ReactNode }) => {
-  // Modifiable by the user
-  const [workMinutes, setWorkMinutes] = useState(0);
-  const [workSeconds, setWorkSeconds] = useState(15);
-  const [shortBreakMinutes, setShortBreakMinutes] = useState(0);
-  const [shortBreakSeconds, setShortBreakSeconds] = useState(15);
-  const [longBreakMinutes, setLongBreakMinutes] = useState(0);
-  const [longBreakSeconds, setLongBreakSeconds] = useState(15);
+  const settingsContext = useContext(SettingsContext);
 
-  // Not modifiable by the user
+  const workMinutes = settingsContext.settings.timerWorkMinutes;
+  const workSeconds = settingsContext.settings.timerWorkSeconds;
+  const shortBreakMinutes = settingsContext.settings.timerShortBreakMinutes;
+  const shortBreakSeconds = settingsContext.settings.timerShortBreakSeconds;
+  const longBreakMinutes = settingsContext.settings.timerLongBreakMinutes;
+  const longBreakSeconds = settingsContext.settings.timerLongBreakSeconds;
+
   const [phase, setPhase] = useState<Phase>(Phase.WORK);
   const [remainingSeconds, setRemainingSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
@@ -58,10 +59,12 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }
 
+  // Update remaining time whenever the durations change
   useEffect(() => {
-    setRemainingSeconds(getPhaseTotalTime(Phase.WORK));
-    setLoaded(true);
-  }, [workMinutes, workSeconds]);
+    setIsActive(false);
+    setRemainingSeconds(getPhaseTotalTime(phase));
+    setLoaded(true); // Mainly for the initial load
+  }, [workMinutes, workSeconds, shortBreakMinutes, shortBreakSeconds, longBreakMinutes, longBreakSeconds]);
 
   const setPhaseWithDuration = (newPhase: Phase) => {
     setPhase(newPhase);
