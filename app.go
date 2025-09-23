@@ -17,7 +17,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const APP_NAME = "Tungsten"
+const APP_NAME = "TolariApp"
 
 type AppSettings struct {
 	UIZoom float32 `json:"zoom"`
@@ -541,7 +541,7 @@ func (a *App) SaveAllKanbanData(cards map[string]string, columns map[string][]st
 //		  Notifications
 ////////////////////////////////
 func (a *App) ShowNotification(title string, message string) {
-	err := beeep.Notify(title, message, "./frontend/src/assets/images/tungsten-logo.png")
+	err := beeep.Notify(title, message, "./frontend/src/assets/images/tolari-logo.png")
 	if err != nil {
 		log.Fatal(err);
 	}

@@ -1,4 +1,4 @@
-module tungsten-app
+module TolariApp
 
 go 1.23
 

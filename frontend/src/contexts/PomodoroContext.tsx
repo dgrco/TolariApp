@@ -73,9 +73,9 @@ export const PomodoroProvider = ({ children }: { children: React.ReactNode }) =>
 
   const scheduleNext = () => {
     if (phase === Phase.WORK) {
-      sendNotification("Tungsten", "Time for a break!");
+      sendNotification("TolariApp", "Time for a break!");
     } else {
-      sendNotification("Tungsten", "Time to work. You got this!");
+      sendNotification("TolariApp", "Time to work. You got this!");
     }
     if (phase === Phase.WORK) {
       setWorkIteration((prev) => {
