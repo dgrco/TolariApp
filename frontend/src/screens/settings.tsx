@@ -82,7 +82,7 @@ export default function SettingsPage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col h-screen bg-dark p-4 overflow-y-scroll"
+      className="flex flex-col h-screen bg-dark p-4 overflow-y-auto"
     >
       <div className="flex justify-start mb-4">
         <button

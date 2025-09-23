@@ -5,6 +5,9 @@
 html {
   background-color: #121212;
   color: #F3F4F6;
+
+  scrollbar-width: thin;
+  scrollbar-color: #595959 #2d2d2d;
 }
 
 @font-face {
@@ -22,4 +25,20 @@ body {
 
 #app {
   height: 100vh;
+}
+
+/* Global scrollbar styles */
+::-webkit-scrollbar {
+  width: 0.35rem;
+  height: 0.35rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #2d2d2d;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #595959;
+  border-radius: 1rem;
 }

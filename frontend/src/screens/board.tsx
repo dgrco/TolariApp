@@ -157,7 +157,8 @@ export default function Board() {
                 {/*   } */}
                 {/* </div> */}
               </div>
-              <div className="flex flex-1 gap-4 px-4 pb-4 overflow-y-auto">
+              {/* NOTE: padding is used here so the columns don't reach the screen edges */}
+              <div className="flex flex-1 gap-4 px-4 pb-4 overflow-y-hidden">
                 {Object.entries(columnTitles).map(([colId, title]) => {
                   return (
                     <ColumnContainer

@@ -36,12 +36,14 @@ export default function ColumnContainer(props: Props) {
         </div>
         <span className="text-md">{nChildren}</span>
       </div>
-      <div
-        ref={ref}
-        style={style}
-        className="flex flex-col bg-dark-secondary rounded-ee-xl rounded-es-xl transition-opacity max-h-full overflow-y-scroll">
-        <div className="flex flex-col gap-3 px-8 py-6">
-          {children}
+      <div className="flex flex-col bg-dark-secondary rounded-b-xl transition-opacity max-h-full overflow-hidden p-2">
+        <div
+          ref={ref}
+          style={style}
+          className="flex flex-col transition-opacity overflow-y-auto">
+          <div className="flex flex-col gap-3 px-6 py-6">
+            {children}
+          </div>
         </div>
       </div>
     </div>

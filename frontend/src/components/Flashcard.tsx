@@ -64,7 +64,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
         {/* Editable Content */}
         <div
           ref={contentRef}
-          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none text-start overflow-y-scroll pr-4 overflow-x-hidden"
+          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none text-start overflow-y-auto pr-4 overflow-x-hidden"
           contentEditable
           onInput={() => {
             if (contentRef.current) {
@@ -93,7 +93,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
       exit={{ opacity: 0, transition: { duration: 0.1 } }}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.95, transition: { type: "spring", stiffness: 400, damping: 20 } }}
-      className="relative flex items-center justify-center bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] rounded-2xl border-2 border-border"
+      className="relative flex items-center justify-center bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] rounded-2xl border-2 border-border cursor-default"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onClick={handleFlip}
@@ -117,7 +117,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
 
         <textarea
           readOnly
-          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none overflow-y-scroll pr-4"
+          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none overflow-y-auto pr-4 cursor-default"
           style={{scrollbarGutter: 'stable'}}
           value={showFront ? card.front : card.back}
         />

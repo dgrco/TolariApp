@@ -99,7 +99,7 @@ export default function HomePage() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col justify-between h-screen text-center"
+      className="flex flex-col justify-between h-screen text-center overflow-y-hidden"
     >
       <div className="flex justify-between items-center m-4">
         <div className="h-9 w-9">{/*Spacer*/}</div>
