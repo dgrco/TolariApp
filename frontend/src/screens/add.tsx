@@ -19,7 +19,7 @@ export default function AddPage() {
       className="flex flex-col h-screen w-screen p-4 bg-dark overflow-hidden"
     >
       <div className="flex justify-start">
-        <Link to="/" className="p-2 w-10 h-10 bg-dark-secondary text-xl rounded-full flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
+        <Link draggable="false" to="/" className="p-2 w-10 h-10 bg-dark-secondary text-xl rounded-full flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
           &#8592;
         </Link>
       </div>

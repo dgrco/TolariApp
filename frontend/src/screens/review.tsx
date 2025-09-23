@@ -27,7 +27,7 @@ export default function Review() {
   return (
     <div className="flex flex-col h-screen p-6 bg-dark">
       <div className="flex justify-start">
-        <Link to="/" className="select-none px-4 py-2 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
+        <Link draggable="false" to="/" className="select-none px-4 py-2 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
           &#8592;
           <span className="ml-2">Exit Review</span>
         </Link>

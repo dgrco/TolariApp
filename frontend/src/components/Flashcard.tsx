@@ -117,7 +117,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
 
         <textarea
           readOnly
-          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none overflow-y-auto pr-4 cursor-default"
+          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none overflow-y-auto pr-4 cursor-default select-none"
           style={{scrollbarGutter: 'stable'}}
           value={showFront ? card.front : card.back}
         />

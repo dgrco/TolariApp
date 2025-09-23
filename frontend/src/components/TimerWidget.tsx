@@ -83,7 +83,7 @@ export default function TimerWidget({ size, embed = false }: {
           >
             <EyeIcon />
           </button>
-          <Link to="/timer" className="block px-4 py-2 hover:bg-dark-secondary hover:opacity-85 w-full h-full rounded-lg transition-colors">
+          <Link draggable="false" to="/timer" className="block px-4 py-2 hover:bg-dark-secondary hover:opacity-85 w-full h-full rounded-lg transition-colors">
             <div className="relative flex items-center justify-center" style={{ width: `${size - 0.5}rem`, height: `${size - 0.5}rem` }}>
               {/* Container for the text */}
               <div className="absolute flex flex-col">

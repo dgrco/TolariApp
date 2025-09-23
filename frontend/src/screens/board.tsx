@@ -141,7 +141,7 @@ export default function Board() {
           >
             <div className="flex flex-col max-h-screen">
               <div className="flex justify-between p-4">
-                <Link to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200 select-none">
+                <Link draggable="false" to="/" className="px-3 py-2 rounded-full bg-dark-secondary text-white hover:bg-dark-secondary-hover transition-colors duration-200 select-none">
                   &#8592;
                 </Link>
                 {/* <div className=""> */}

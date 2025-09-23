@@ -70,6 +70,7 @@ export default function PomodoroTimer() {
       <div className="fixed bottom-2 self-center text-slate-500">
         You can adjust the duration of each phase in the 
         <Link 
+          draggable="false"
           to="/settings#timer" 
           className="underline pl-1"
         >

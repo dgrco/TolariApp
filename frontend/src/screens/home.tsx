@@ -109,18 +109,18 @@ export default function HomePage() {
             embed={true}
           />
         </div>
-        <div className="flex justify-around w-1/3 bg-dark-secondary rounded-full">
-          <Link to="/review" className="flex-1 p-2 rounded-l-full border-r border-border hover:bg-dark-secondary-hover transition-colors duration-200">
+        <div className="select-none flex justify-around w-1/3 bg-dark-secondary rounded-full">
+          <Link draggable="false" to="/review" className="flex-1 p-2 rounded-l-full border-r border-border hover:bg-dark-secondary-hover transition-colors duration-200">
             Review
           </Link>
-          <Link to="/plan" className="flex-1 p-2 hover:bg-dark-secondary-hover transition-colors duration-200">
+          <Link draggable="false" to="/plan" className="flex-1 p-2 hover:bg-dark-secondary-hover transition-colors duration-200">
             Plan
           </Link>
-          <Link to="/timer" className="flex-1 p-2 rounded-r-full hover:bg-dark-secondary-hover border-l border-border transition-colors duration-200">
+          <Link draggable="false" to="/timer" className="flex-1 p-2 rounded-r-full hover:bg-dark-secondary-hover border-l border-border transition-colors duration-200">
             Timer
           </Link>
         </div>
-        <Link to="/settings" className="p-2 bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200">
+        <Link draggable="false" to="/settings" className="p-2 bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -187,11 +187,11 @@ export default function HomePage() {
                   transition={{ duration: 0.075 }}
                   className="flex flex-1 justify-between items-center"
                 >
-                  <span className="w-[12.5rem]">{/* Spacer */}</span>
-                  <p className="w-24">{cardIndex + 1} / {cardKeys.length}</p>
+                  <span className="w-[12.5rem] select-none">{/* Spacer */}</span>
+                  <p className="w-24 select-none">{cardIndex + 1} / {cardKeys.length}</p>
                   <div className="flex gap-2">
                     <button
-                      className="flex bg-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer"
+                      className="flex bg-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
                       onClick={editCard}
                     >
                       <span className="mr-2">
@@ -218,11 +218,11 @@ export default function HomePage() {
                   transition={{ duration: 0.075 }}
                   className="flex flex-1 justify-between items-center"
                 >
-                  <span className="w-[12.5rem]">{/* Spacer */}</span>
-                  <p className="w-24">{cardIndex + 1} / {cardKeys.length}</p>
+                  <span className="w-[12.5rem] select-none">{/* Spacer */}</span>
+                  <p className="w-24 select-none">{cardIndex + 1} / {cardKeys.length}</p>
                   <div className="flex gap-2">
                     <button
-                      className="flex bg-dark-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer"
+                      className="flex bg-dark-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
                       onClick={editCleanup}
                     >
                       <span className="mr-2">
@@ -247,7 +247,7 @@ export default function HomePage() {
         </div>
       </div>
       <div className="flex m-4 justify-center font-semibold">
-        <Link to="/add" className="w-40 h-8 text-base p-1 mb-6 rounded-full bg-primary hover:opacity-85 transition-opacity duration-200 flex items-center justify-center select-none">
+        <Link draggable="false" to="/add" className="w-40 h-8 text-base p-1 mb-6 rounded-full bg-primary hover:opacity-85 transition-opacity duration-200 flex items-center justify-center select-none">
           <span>+</span>
           <span className="ml-1">Add</span>
         </Link>
