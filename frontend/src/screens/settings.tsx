@@ -52,7 +52,7 @@ const Category = ({ id, title, children }: CategoryProps) => {
         `}
       </style>
       <div id={id} className="flex flex-col p-2 rounded-lg bg-dark transition-colors">
-        <div className="w-fit px-2 py-1 my-2 text-lg text-text bg-gray-700 font-semibold rounded-lg">
+        <div className="w-fit px-2 py-1 my-2 text-lg text-text bg-primary font-semibold rounded-lg">
           {title}
         </div>
         {children}

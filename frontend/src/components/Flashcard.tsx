@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { EditIcon, SwitchSidesIcon, TrashIcon } from "./SVGComponents";
 
 interface Props {
-  card: main.Flashcard;
+  card: main.Flashcard | null;
   editMode?: boolean;
   frontEditRef: React.MutableRefObject<string | null>;
   backEditRef: React.MutableRefObject<string | null>;
@@ -20,7 +20,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
   }
 
   useEffect(() => {
-    if (editMode && contentRef.current) {
+    if ((editMode || !card) && contentRef.current) {
       if (showFront) {
         contentRef.current.innerText = frontEditRef.current || "";
       } else {
@@ -39,7 +39,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
     }
   }, [editMode, showFront]);
 
-  if (editMode) {
+  if (card === null || editMode) {
     return (
       <motion.div
         className="relative flex flex-col bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] justify-center items-center rounded-2xl border-2 border-secondary transition-colors"
