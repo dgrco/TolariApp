@@ -1,5 +1,5 @@
 build/bin
 node_modules
 frontend/dist
-TolariApp.AppDir
+Tolari.AppDir
 Tolari-x86_64.AppImage

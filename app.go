@@ -17,7 +17,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const APP_NAME = "TolariApp"
+const APP_NAME = "Tolari"
 
 type AppSettings struct {
 	UIZoom float32 `json:"zoom"`

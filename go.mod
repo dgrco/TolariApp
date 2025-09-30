@@ -1,4 +1,4 @@
-module TolariApp
+module Tolari
 
 go 1.23
 
