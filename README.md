@@ -72,7 +72,8 @@ If you prefer to install the application so it appears in your system's applicat
 3.  **Run the Installer:**
     Execute the installation script. You may be prompted for your password as it will install files to system directories.
     ```bash
-    sudo ./install.sh
+    chmod +x install.sh
+    ./install.sh
     ```
 The script will copy the necessary files and create a `.desktop` entry, so you can find it in your application launcher.
 
@@ -90,7 +91,8 @@ If you used the `install.sh` script and wish to remove the application, you can 
     ```
 2.  **Run the Uninstaller:**
     ```bash
-    sudo ./uninstall.sh
+    chmod +x uninstall.sh
+    ./uninstall.sh
     ```
 This will remove the application files and the `.desktop` entry from your system.
 
