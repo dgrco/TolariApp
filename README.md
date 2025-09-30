@@ -32,13 +32,22 @@ You have two options for running the application. Choose the one that best suits
 
 This is the simplest way to get started. The **AppImage** is a single file that contains the application and all its dependencies, which can be run without installation.
 
-1.  **Make the AppImage executable:**
+1.  **Extract the Archive:**
+    Open your terminal, navigate to the directory where you downloaded the file, and extract the `.tar.gz` archive:
+    ```bash
+    tar -xvzf Tolari.tar.gz
+    ```
+2.  **Navigate into the Directory:**
+    ```bash
+    cd Tolari/
+    ```
+3.  **Make the AppImage executable:**
     * **GUI Method:** Right-click the AppImage file, go to "Properties," then the "Permissions" tab, and check the box that says **"Allow executing file as program."**
     * **Terminal Method:**
         ```bash
         chmod +x Tolari-x86_64.AppImage
         ```
-2.  **Run the application:**
+4.  **Run the application:**
     * **GUI Method:** Double-click the AppImage file.
     * **Terminal Method:**
         ```bash
