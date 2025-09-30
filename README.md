@@ -5,6 +5,8 @@ The three techniques are: **Spaced-Repetition**, a **Kanban Planning Board**, an
 
 # Installation Guide ⚙️
 
+First, find the correct file to download from "Releases".
+
 ## Windows
 
 Tolari can be installed on Windows by simply running the `-installer.exe` file.
