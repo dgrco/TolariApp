@@ -5,7 +5,17 @@ The three techniques are: **Spaced-Repetition**, a **Kanban Planning Board**, an
 
 # Installation Guide ⚙️
 
-Thank you for downloading **Tolari**! This guide will walk you through the necessary steps to install and run the application on your Linux system. You can run the application directly as an **AppImage** or install it using the provided script.
+## Windows
+
+Tolari can be installed on Windows by simply running the `-installer.exe` file.
+
+### Important Information For Windows Users
+
+When installing on Windows, it will show a warning that "Windows Protected Your PC" or "Unknown Publisher" (or some other variant). This is because code signing certificates are prohibitively expensive and I am currently independently developing this app without funding. This does not mean the file is malicious (the code is open source for inspection!). I encourage everyone to run the installer through services like VirusTotal as an additional safety check.
+
+## Linux
+
+This guide will walk you through the necessary steps to install and run the application on your Linux system. You can run the application directly as an **AppImage** or install it using the provided script.
 
 ---
 
@@ -71,7 +81,14 @@ The script will copy the necessary files and create a `.desktop` entry, so you c
 
 ---
 
-## 3. How to Uninstall 🗑️
+# How to Uninstall 🗑️
+
+## Windows
+
+1. Select **Start** > **Settings** > **Apps** > **Installed apps**.
+2. Search for "Tolari" and select "**More** (...)" > **Uninstall**
+
+## Linux
 
 ### For Script Installation (Option B)
 
