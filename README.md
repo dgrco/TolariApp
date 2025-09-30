@@ -13,7 +13,9 @@ Tolari can be installed on Windows by simply running the `-installer.exe` file.
 
 ### Important Information For Windows Users
 
-When installing on Windows, it will show a warning that "Windows Protected Your PC" or "Unknown Publisher" (or some other variant). This is because code signing certificates are prohibitively expensive and I am currently independently developing this app without funding. This does not mean the file is malicious (the code is open source for inspection!). I encourage everyone to run the installer through services like VirusTotal as an additional safety check.
+When installing on Windows, it will show a warning that "Windows Protected Your PC" or "Unknown Publisher" (or some other variant). 
+
+This is because code signing certificates are prohibitively expensive and I am currently independently developing this app without funding. This **does not** mean the file is malicious (the code is open source for inspection!). I encourage everyone to run the installer through services like [VirusTotal](https://www.virustotal.com) as an additional safety check.
 
 ## Linux
 
