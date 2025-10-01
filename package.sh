@@ -19,13 +19,39 @@ echo "Packaging $APP..."
 # Recreate the release directory
 mkdir -p "$RELEASE_DIR" "$RELEASE_DIR/$APP"
 
-if [ ! -f "$APPIMAGE" ]; then
-    echo "ERROR: Build the AppImage using 'wails build' and make sure its in the root directory."
-    exit 1
-fi
+# AppImage Setup
+echo "Creating AppImage and placing it in $RELEASE_DIR/$APP..."
 
-echo "Copying $APPIMAGE to $RELEASE_DIR/$APP..."
-cp "$APPIMAGE" "$RELEASE_DIR/$APP"
+mkdir -p "$APP.AppDir/usr/bin" 
+
+# Copy binary
+cp build/bin/Tolari "$APP.AppDir/usr/bin"
+
+# Copy icon
+cp build/appicon.png "$APP.AppDir/icon.png"
+
+# Create a desktop file
+cat > "$APP.AppDir/myapp.desktop" <<EOF
+[Desktop Entry]
+Name=Tolari
+Exec=Tolari
+Icon=icon
+Type=Application
+Categories=Utility;
+EOF
+
+# Create AppRun (entry point)
+cat > "$APP.AppDir/AppRun" <<'EOF'
+#!/bin/bash
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/myapp" "$@"
+EOF
+chmod +x "$APP.AppDir/AppRun"
+
+echo "--------------------------- IGNORE ---------------------------"
+ARCH=x86_64 appimagetool "$APP.AppDir"
+mv "$APP.AppDir" "$RELEASE_DIR/$APP"
+echo "--------------------------- IGNORE ---------------------------"
 
 echo "Copying LICENSE to $RELEASE_DIR/$APP..."
 cp LICENSE "$RELEASE_DIR/$APP"
