@@ -10,6 +10,7 @@ INSTALL_DIR="$HOME/.local/bin"
 DESKTOP_DIR="$HOME/.local/share/applications"
 CONFIG_DIR="$HOME/.config/$APP"
 CACHE_DIR="$HOME/.cache/$APP"
+ICON_DIR="$HOME/.local/share/icons"
 
 # --- Function to Prompt for Yes/No Confirmation ---
 # Usage: ask_user "Message to user (Y/n)?"
@@ -55,7 +56,7 @@ echo "--------------------------------------------------------"
 
 
 # 3. Remove the executable from the installation directory
-APP_EXECUTABLE="$INSTALL_DIR/$APP"
+APP_EXECUTABLE="$INSTALL_DIR/$APPIMAGE"
 if [ -f "$APP_EXECUTABLE" ]; then
     rm -f "$APP_EXECUTABLE"
     echo "Removed executable: $APP_EXECUTABLE"
@@ -68,13 +69,21 @@ DESKTOP_FILE="$DESKTOP_DIR/$APP.desktop"
 if [ -f "$DESKTOP_FILE" ]; then
     rm -f "$DESKTOP_FILE"
     echo "Removed desktop entry: $DESKTOP_FILE"
-    
-    # Optional: Update the application menu cache
-    if command -v update-desktop-database &> /dev/null; then
-        update-desktop-database "$DESKTOP_DIR"
-    fi
 else
     echo "Warning: Desktop file not found at $DESKTOP_FILE. Skipping."
+fi
+
+# 5. Remove the icon file
+ICON_FILE="$ICON_DIR/$APP.svg"
+if [ -f "$ICON_FILE" ]; then
+    rm -f "$ICON_FILE"
+    echo "Removed icon: $ICON_FILE"
+else
+    echo "Warning: Icon file not found at $ICON_FILE. Skipping."
+fi
+
+if command -v update-desktop-database &> /dev/null; then
+    update-desktop-database "$DESKTOP_DIR"
 fi
 
 echo ""

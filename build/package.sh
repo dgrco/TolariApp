@@ -7,7 +7,7 @@ set -e
 APP=Tolari
 APPIMAGE="$APP-x86_64.AppImage"
 APPDIR="$APP.AppDir"
-RELEASE_DIR="build/release"
+RELEASE_DIR="release"
 
 if [ -d "$RELEASE_DIR" ]; then
     echo "Detected release directory. Clearing..."
@@ -30,17 +30,17 @@ echo "Creating AppImage and placing it in $RELEASE_DIR/$APP..."
 mkdir -p "$APPDIR/usr/bin" 
 
 # Copy binary
-cp build/bin/Tolari "$APPDIR/usr/bin"
+cp bin/Tolari "$APPDIR/usr/bin"
 
 # Copy icon
-cp build/appicon.png "$APPDIR/icon.png"
+cp logo.svg "$APPDIR/Tolari.svg"
 
 # Create a desktop file
 cat > "$APPDIR/Tolari.desktop" <<EOF
 [Desktop Entry]
 Name=Tolari
 Exec=Tolari
-Icon=icon
+Icon=Tolari
 Type=Application
 Categories=Utility;
 EOF
@@ -57,10 +57,10 @@ ARCH=x86_64 appimagetool "$APPDIR" > /dev/null
 mv "$APPIMAGE" "$RELEASE_DIR/$APP"
 
 echo "Copying LICENSE to $RELEASE_DIR/$APP..."
-cp LICENSE "$RELEASE_DIR/$APP"
+cp ../LICENSE "$RELEASE_DIR/$APP"
 
-echo "Copying README-linux.md to $RELEASE_DIR/$APP/README.md..."
-cp README-linux.md "$RELEASE_DIR/$APP/README.md"
+echo "Copying README-linux-instructions.md to $RELEASE_DIR/$APP/README.md..."
+cp README-linux-instructions.md "$RELEASE_DIR/$APP/README.md"
 
 echo "Copying install/uninstall scripts to $RELEASE_DIR/$APP..."
 cp install.sh uninstall.sh "$RELEASE_DIR/$APP"
@@ -69,4 +69,5 @@ echo "Archiving and compressing to $RELEASE_DIR/$APP.tar.gz..."
 cd "$RELEASE_DIR" && tar -czf "$APP.tar.gz" "$APP"
 cd ../../
 
+echo ""
 echo "Done! Find the tarball in $RELEASE_DIR."
