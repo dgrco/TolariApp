@@ -25,6 +25,35 @@ export default function HomePage() {
   const frontEditRef = useRef<string | null>(null);
   const backEditRef = useRef<string | null>(null);
 
+  // Element references
+  const flashcardRef = useRef<HTMLDivElement>(null);
+  const nextCardRef = useRef<HTMLButtonElement>(null);
+  const prevCardRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (mode === CardMode.READ) {
+        if (e.code === "Space" || e.key === "Space") {
+          e.preventDefault();
+          flashcardRef.current?.click();
+        }
+        else if (e.code === "ArrowLeft" || e.key == "ArrowLeft") {
+          e.preventDefault();
+          prevCardRef.current?.click();
+        } else if (e.code === "ArrowRight" || e.key === "ArrowRight") {
+          e.preventDefault();
+          nextCardRef.current?.click();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mode]);
+
   useEffect(() => {
     const keys = Object.keys(cardCtx.flashcards).map(key => parseInt(key, 10));
     setCardKeys(keys);
@@ -40,7 +69,7 @@ export default function HomePage() {
       // We use Math.min(...) here in case we delete the last card
       if (savedCardIndex) {
         return prev === null ? parseInt(savedCardIndex) : Math.min(prev, keys.length - 1)
-      } 
+      }
 
       // Fallback
       return prev === null ? 0 : Math.min(prev, keys.length - 1)
@@ -153,7 +182,9 @@ export default function HomePage() {
         <div className="flex justify-between items-center">
           {cardKeys.length > 1 && mode === CardMode.READ &&
             <button
+              ref={prevCardRef}
               className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 outline-none select-none"
+              title="Shortcut: <LeftArrow>"
               onClick={() => {
                 if (cardIndex === null)
                   return;
@@ -170,6 +201,7 @@ export default function HomePage() {
             {activeCardId && cardCtx.flashcards[activeCardId] ?
               (
                 <Flashcard
+                  ref={flashcardRef}
                   key={activeCardId}
                   card={cardCtx.flashcards[activeCardId]}
                   editMode={mode === CardMode.EDIT}
@@ -182,7 +214,9 @@ export default function HomePage() {
           </AnimatePresence>
           {cardKeys.length > 1 && mode === CardMode.READ &&
             <button
+              ref={nextCardRef}
               className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 outline-none select-none"
+              title="Shortcut: <RightArrow>"
               onClick={() => {
                 if (cardIndex !== null) {
                   setCardIndex((cardIndex + 1) % cardKeys.length);

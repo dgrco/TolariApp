@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { GetReviewCards, ReviewCard } from "../../wailsjs/go/main/App";
 import { main } from "../../wailsjs/go/models";
@@ -14,6 +14,8 @@ export default function Review() {
   const [reviewCards, setReviewCards] = useState<main.Flashcard[]>([]);
   const [reviewCardIndex, setReviewCardIndex] = useState<number | null>(null);
 
+  const flashcardRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     (async () => {
       const cards = await GetReviewCards();
@@ -23,12 +25,25 @@ export default function Review() {
         setReviewCardIndex(0);
       }
     })();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space" || e.key === "Space") {
+        e.preventDefault();
+        flashcardRef.current?.click();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (
-    <motion.div 
-      initial={{opacity: 0}}
-      animate={{opacity: 1}}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="flex flex-col h-screen p-6 bg-dark"
     >
       <div className="flex justify-start">
@@ -48,7 +63,7 @@ export default function Review() {
           {
             reviewCardIndex !== null && reviewCardIndex < reviewCards.length ?
               (<div key={reviewCardIndex}>
-                <Flashcard card={reviewCards[reviewCardIndex]} />
+                <Flashcard ref={flashcardRef} card={reviewCards[reviewCardIndex]} />
               </div>) :
               <p className="-mt-10">No Cards to Review</p>
           }
