@@ -191,7 +191,7 @@ export default function HomePage() {
             </button>
           }
         </div>
-        <div className="flex w-[70vw] mt-4">
+        <div className="flex w-[70vw] max-w-[65rem] mt-4">
           {cardIndex !== null &&
             <AnimatePresence mode="wait">
               {mode === CardMode.READ ?
@@ -203,7 +203,7 @@ export default function HomePage() {
                   transition={{ duration: 0.075 }}
                   className="flex flex-1 justify-between items-center"
                 >
-                  <span className="w-[12.5rem] select-none">{/* Spacer */}</span>
+                  <span className="w-48 select-none">{/* Spacer */}</span>
 
                   <div className="flex items-center">
                     <NumberInput
