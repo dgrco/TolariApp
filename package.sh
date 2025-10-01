@@ -6,12 +6,17 @@ set -e
 
 APP=Tolari
 APPIMAGE="$APP-x86_64.AppImage"
+APPDIR="$APP.AppDir"
 RELEASE_DIR="build/release"
 
 if [ -d "$RELEASE_DIR" ]; then
     echo "Detected release directory. Clearing..."
     rm -rf "$RELEASE_DIR"
-    echo "Cleared successfully"
+fi
+
+if [ -d "$APPDIR" ]; then
+    echo "Detected AppDir directory. Clearing..."
+    rm -rf "$APPDIR"
 fi
 
 echo "Packaging $APP..."
@@ -22,16 +27,16 @@ mkdir -p "$RELEASE_DIR" "$RELEASE_DIR/$APP"
 # AppImage Setup
 echo "Creating AppImage and placing it in $RELEASE_DIR/$APP..."
 
-mkdir -p "$APP.AppDir/usr/bin" 
+mkdir -p "$APPDIR/usr/bin" 
 
 # Copy binary
-cp build/bin/Tolari "$APP.AppDir/usr/bin"
+cp build/bin/Tolari "$APPDIR/usr/bin"
 
 # Copy icon
-cp build/appicon.png "$APP.AppDir/icon.png"
+cp build/appicon.png "$APPDIR/icon.png"
 
 # Create a desktop file
-cat > "$APP.AppDir/myapp.desktop" <<EOF
+cat > "$APPDIR/Tolari.desktop" <<EOF
 [Desktop Entry]
 Name=Tolari
 Exec=Tolari
@@ -41,17 +46,15 @@ Categories=Utility;
 EOF
 
 # Create AppRun (entry point)
-cat > "$APP.AppDir/AppRun" <<'EOF'
+cat > "$APPDIR/AppRun" <<'EOF'
 #!/bin/bash
 HERE="$(dirname "$(readlink -f "$0")")"
-exec "$HERE/usr/bin/myapp" "$@"
+exec "$HERE/usr/bin/Tolari" "$@"
 EOF
-chmod +x "$APP.AppDir/AppRun"
+chmod +x "$APPDIR/AppRun"
 
-echo "--------------------------- IGNORE ---------------------------"
-ARCH=x86_64 appimagetool "$APP.AppDir"
-mv "$APP.AppDir" "$RELEASE_DIR/$APP"
-echo "--------------------------- IGNORE ---------------------------"
+ARCH=x86_64 appimagetool "$APPDIR" > /dev/null
+mv "$APPIMAGE" "$RELEASE_DIR/$APP"
 
 echo "Copying LICENSE to $RELEASE_DIR/$APP..."
 cp LICENSE "$RELEASE_DIR/$APP"
