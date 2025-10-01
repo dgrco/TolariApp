@@ -39,7 +39,6 @@ const NumberInput = ({ defaultValue, onChange, min, max, bind, className }: Prop
         setValue(min.toString());
       }
     }
-    console.log(newValue)
     onChange(newValue);
   };
 
