@@ -21,7 +21,7 @@ export default function PomodoroTimer() {
     >
       <div className="flex justify-start mb-4">
         <button
-          className="p-2 w-10 h-10 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200"
+          className="p-2 w-10 h-10 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200 select-none outline-none"
           onClick={() => navigate(-1)}
         >
           &#8592;
@@ -39,7 +39,7 @@ export default function PomodoroTimer() {
           {
             timerActive ? (
               <button
-                className="appearance-none bg-primary text-lg rounded-full w-24 py-2 hover:opacity-85"
+                className="appearance-none bg-primary text-lg rounded-full w-24 py-2 hover:opacity-85 select-none outline-none"
                 onClick={() => {
                   pomodoroContext.stopPomodoroTimer()
                   setTimerActive(false);
@@ -49,7 +49,7 @@ export default function PomodoroTimer() {
               </button>
             ) : (
               <button
-                className="appearance-none bg-primary text-lg rounded-full w-24 py-2 hover:opacity-85"
+                className="appearance-none bg-primary text-lg rounded-full w-24 py-2 hover:opacity-85 select-none outline-none"
                 onClick={() => {
                   pomodoroContext.startPomodoroTimer()
                   setTimerActive(true);
@@ -60,7 +60,7 @@ export default function PomodoroTimer() {
             )
           }
           <button
-            className="flex justify-center items-center appearance-none bg-transparent text-lg rounded-full w-12 py-2 hover:bg-dark-secondary hover:opacity-85"
+            className="flex justify-center items-center appearance-none bg-transparent text-lg rounded-full w-12 py-2 hover:bg-dark-secondary hover:opacity-85 select-none outline-none"
             onClick={() => pomodoroContext.skipPhase()}
           >
             <SkipIcon />

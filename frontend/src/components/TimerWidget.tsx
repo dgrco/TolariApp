@@ -60,7 +60,7 @@ export default function TimerWidget({ size, embed = false }: {
     if (pomodoroContext.hidden) {
       return (
         <button
-          className="p-2 bg-dark-secondary cursor-pointer opacity-30 rounded-full z-10 hover:bg-dark-secondary-hover hover:opacity-100 transition-all"
+          className="p-2 bg-dark-secondary cursor-pointer opacity-30 rounded-full z-10 hover:bg-dark-secondary-hover hover:opacity-100 transition-all select-none outline-none"
           onClick={() => pomodoroContext.setHidden(false)}
         >
           <EyeIcon />
@@ -78,7 +78,7 @@ export default function TimerWidget({ size, embed = false }: {
           onMouseLeave={() => setHovering(false)}
         >
           <button
-            className={`absolute top-0 right-0 bg-dark-secondary cursor-pointer p-2 rounded-full z-10 ${hovering ? 'opacity-30' : 'opacity-0'} hover:bg-dark-secondary-hover hover:opacity-100 transition-all`}
+            className={`absolute top-0 right-0 bg-dark-secondary cursor-pointer p-2 rounded-full z-10 ${hovering ? 'opacity-30' : 'opacity-0'} hover:bg-dark-secondary-hover hover:opacity-100 transition-all select-none outline-none`}
             onClick={() => pomodoroContext.setHidden(true)}
           >
             <EyeIcon />

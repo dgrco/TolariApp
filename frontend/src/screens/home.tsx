@@ -116,6 +116,7 @@ export default function HomePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="flex flex-col justify-between h-screen text-center overflow-y-hidden"
+      draggable="false"
     >
       <div className="flex justify-between items-center m-4">
         <div className="h-9 w-9">{/*Spacer*/}</div>
@@ -152,7 +153,7 @@ export default function HomePage() {
         <div className="flex justify-between items-center">
           {cardKeys.length > 1 && mode === CardMode.READ &&
             <button
-              className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 select-none"
+              className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 outline-none select-none"
               onClick={() => {
                 if (cardIndex === null)
                   return;
@@ -181,7 +182,7 @@ export default function HomePage() {
           </AnimatePresence>
           {cardKeys.length > 1 && mode === CardMode.READ &&
             <button
-              className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 select-none"
+              className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 outline-none select-none"
               onClick={() => {
                 if (cardIndex !== null) {
                   setCardIndex((cardIndex + 1) % cardKeys.length);
@@ -221,7 +222,7 @@ export default function HomePage() {
 
                   <div className="flex gap-2">
                     <button
-                      className="flex bg-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
+                      className="flex bg-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer outline-none select-none"
                       onClick={editCard}
                     >
                       <span className="mr-2">
@@ -230,7 +231,7 @@ export default function HomePage() {
                       Edit
                     </button>
                     <button
-                      className="flex bg-error w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
+                      className="flex bg-error w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer outline-none select-none"
                       onClick={deleteCard}
                     >
                       <span className="mr-2">
@@ -252,7 +253,7 @@ export default function HomePage() {
                   <p className="w-24 select-none">{cardIndex + 1} / {cardKeys.length}</p>
                   <div className="flex gap-2">
                     <button
-                      className="flex bg-dark-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
+                      className="flex bg-dark-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer outline-none select-none"
                       onClick={editCleanup}
                     >
                       <span className="mr-2">
@@ -261,7 +262,7 @@ export default function HomePage() {
                       Cancel
                     </button>
                     <button
-                      className="flex bg-success w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
+                      className="flex bg-success w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer outline-none select-none"
                       onClick={updateCard}
                     >
                       <span className="mr-2">

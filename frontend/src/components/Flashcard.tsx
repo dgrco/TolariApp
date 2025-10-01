@@ -13,6 +13,7 @@ interface Props {
 const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef }: Props) => {
   const [showFront, setShowFront] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
 
   const handleFlip = () => {
@@ -40,6 +41,12 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
     }
   }, [editMode, showFront]);
 
+  useEffect(() => {
+    if (cardRef.current) {
+      cardRef.current.focus();
+    }
+  }, [cardRef])
+
   if (card === null || editMode) {
     return (
       <motion.div
@@ -58,6 +65,7 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
           transition={{ duration: 0.1 }}
           className="select-none cursor-pointer absolute bottom-2 right-2 bg-dark-secondary-hover p-4 rounded-full"
           onClick={handleFlip}
+          title="Shortcut: <Tab>"
         >
           <SwitchSidesIcon />
         </motion.span>
@@ -77,6 +85,12 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
               }
             }
           }}
+          onKeyDown={(event) => {
+            if (event.key === 'Tab') {
+              event.preventDefault();
+              handleFlip()
+            }
+          }}
         />
 
         {/* Front/Back Label */}
@@ -90,15 +104,23 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
   // Read Mode
   return (
     <motion.div
+      ref={cardRef}
+      tabIndex={0}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { duration: 0.1, ease: "easeInOut" } }}
       exit={{ opacity: 0, transition: { duration: 0.1 } }}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.95, transition: { type: "spring", stiffness: 400, damping: 20 } }}
-      className="relative flex items-center justify-center bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] rounded-2xl border-2 border-border cursor-default"
+      className="relative flex items-center justify-center bg-dark-secondary h-[60vh] w-[70vw] max-w-[65rem] rounded-2xl border-2 border-border cursor-default outline-none"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onClick={handleFlip}
+      onKeyDown={(e) => {
+        if (e.code === "Space" || e.key === " ") {
+          e.preventDefault(); // prevents page from scrolling
+          handleFlip();
+        }
+      }}
     >
       <div
         className="absolute w-full h-full flex flex-col justify-center items-center"
@@ -111,22 +133,22 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
               animate={{ opacity: 0.8 }}
               exit={{ opacity: 0 }}
               className="select-none absolute bottom-4 right-4 p-2"
+              title="Shortcut: <Space>"
             >
               <SwitchSidesIcon />
             </motion.span>
           }
         </AnimatePresence>
 
-        <textarea
-          readOnly
-          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none overflow-y-auto pr-4 cursor-default select-none"
-          style={{scrollbarGutter: 'stable'}}
-          value={showFront ? card.front : card.back}
-        />
+        <div
+          className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none overflow-y-auto pr-4 cursor-default text-left"
+        >
+          {showFront ? card.front : card.back}
+        </div>
 
         <p className="opacity-60 text-white mb-6 mt-6 cursor-default select-none">{showFront ? 'FRONT' : 'BACK'}</p>
       </div>
-    </motion.div>
+    </motion.div >
   );
 }
 

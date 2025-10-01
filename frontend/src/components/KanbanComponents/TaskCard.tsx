@@ -124,7 +124,7 @@ const TaskCardComponent = (props: Props) => {
             whileHover={{ boxShadow: "inset 0 0 10px 100px rgba(0, 0, 0, 0.1)" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="select-none cursor-pointer absolute top-0 -translate-y-1/3 left-0 -translate-x-1/3 bg-secondary p-2 rounded-lg"
+            className="outline-none select-none cursor-pointer absolute top-0 -translate-y-1/3 left-0 -translate-x-1/3 bg-secondary p-2 rounded-lg"
             onClick={() => {
               setEditMode(true)
             }}
@@ -154,7 +154,7 @@ const TaskCardComponent = (props: Props) => {
             whileHover={{ boxShadow: "inset 0 0 10px 100px rgba(0, 0, 0, 0.1)" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
-            className="select-none cursor-pointer absolute top-0 -translate-y-1/3 right-0 translate-x-1/3 bg-error p-2 rounded-lg"
+            className="outline-none select-none cursor-pointer absolute top-0 -translate-y-1/3 right-0 translate-x-1/3 bg-error p-2 rounded-lg"
             onClick={() => onDelete(id)}
           >
             <TrashIcon />

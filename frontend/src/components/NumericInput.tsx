@@ -27,7 +27,7 @@ const NumberInput = ({ defaultValue, onChange, min, max, bind, className }: Prop
       if (min !== undefined && numValue < min) {
         newValue = min;
         setValue(min.toString());
-      } else if (max !== undefined && numValue > 59) {
+      } else if (max !== undefined && numValue > max) {
         newValue = max;
         setValue(max.toString());
       } else {
@@ -39,6 +39,7 @@ const NumberInput = ({ defaultValue, onChange, min, max, bind, className }: Prop
         setValue(min.toString());
       }
     }
+    console.log(newValue)
     onChange(newValue);
   };
 

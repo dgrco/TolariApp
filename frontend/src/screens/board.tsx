@@ -180,7 +180,7 @@ export default function Board() {
                           />
                         ))}
                         <button
-                          className="select-none appearance-none w-full border-2 border-primary rounded-md p-1 hover:bg-primary hover:border-primary text-md opacity-80 hover:opacity-100 transition-all"
+                          className="outline-none select-none appearance-none w-full border-2 border-primary rounded-md p-1 hover:bg-primary hover:border-primary text-md opacity-80 hover:opacity-100 transition-all"
                           onClick={async () => {
                             const newTaskId = await SaveKanbanCard("", colId);
                             setTasks((prevTasks) => {

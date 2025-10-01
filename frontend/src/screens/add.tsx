@@ -30,7 +30,7 @@ export default function AddPage() {
           card={null} // card={null} forces edit mode, no need to set editMode={true}
         />
         <button
-          className="flex items-center justify-center w-32 h-8 text-base p-1 mb-6 rounded-full bg-success hover:opacity-85 transition-opacity duration-200 mt-10"
+          className="flex items-center justify-center w-32 h-8 text-base p-1 mb-6 rounded-full bg-success hover:opacity-85 transition-opacity duration-200 mt-10 outline-none select-none"
           onClick={async () => {
             try {
               const flashcard = await SaveFlashcard(frontRef.current!, backRef.current!);
