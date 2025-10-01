@@ -5,10 +5,11 @@ interface Props {
   onChange: (value: number) => void;
   min?: number;
   max?: number;
+  bind?: number | null;
   className?: string;
 }
 
-const NumberInput = ({ defaultValue, onChange, min, max, className }: Props) => {
+const NumberInput = ({ defaultValue, onChange, min, max, bind, className }: Props) => {
   const [value, setValue] = useState(defaultValue.toString());
 
   const handleChange = (e) => {
@@ -40,6 +41,12 @@ const NumberInput = ({ defaultValue, onChange, min, max, className }: Props) => 
     }
     onChange(newValue);
   };
+
+  useEffect(() => {
+    if (bind) {
+      setValue(bind.toString());
+    }
+  }, [bind])
 
   return (
     <input

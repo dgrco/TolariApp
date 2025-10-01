@@ -1,13 +1,13 @@
 import { main } from "../../wailsjs/go/models";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { EditIcon, SwitchSidesIcon, TrashIcon } from "./SVGComponents";
+import { EditIcon, SwitchSidesIcon } from "./SVGComponents";
 
 interface Props {
   card: main.Flashcard | null;
   editMode?: boolean;
-  frontEditRef: React.MutableRefObject<string | null>;
-  backEditRef: React.MutableRefObject<string | null>;
+  frontEditRef?: React.MutableRefObject<string | null>;
+  backEditRef?: React.MutableRefObject<string | null>;
 }
 
 const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef }: Props) => {
@@ -21,10 +21,11 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
 
   useEffect(() => {
     if ((editMode || !card) && contentRef.current) {
+      if (!frontEditRef || !backEditRef) console.error("You need to set edit references!");
       if (showFront) {
-        contentRef.current.innerText = frontEditRef.current || "";
+        contentRef.current.innerText = frontEditRef!.current || "";
       } else {
-        contentRef.current.innerText = backEditRef.current || "";
+        contentRef.current.innerText = backEditRef!.current || "";
       }
       contentRef.current.focus();
       // Place cursor at end
@@ -67,11 +68,12 @@ const Flashcard = ({ card, editMode: editMode = false, frontEditRef, backEditRef
           className="w-[90%] h-full mt-8 resize-none bg-transparent text-white border-none text-3xl outline-none select-none text-start overflow-y-auto pr-4 overflow-x-hidden"
           contentEditable
           onInput={() => {
+            if (!frontEditRef || !backEditRef) console.error("You need to set edit references!");
             if (contentRef.current) {
               if (showFront) {
-                frontEditRef.current = contentRef.current.innerText;
+                frontEditRef!.current = contentRef.current.innerText;
               } else {
-                backEditRef.current = contentRef.current.innerText;
+                backEditRef!.current = contentRef.current.innerText;
               }
             }
           }}

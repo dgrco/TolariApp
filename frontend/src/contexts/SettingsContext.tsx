@@ -48,6 +48,7 @@ export const SettingsProvider = ({ children }: any) => {
 
   useEffect(() => {
     (async () => {
+      await LoadConfig();
       const originalSettings = await GetSettings();
       // We can directly compare `settings` with `defaultSettings` because it would share
       // the same reference if they were equal. For `originalSettings`, however, we need 

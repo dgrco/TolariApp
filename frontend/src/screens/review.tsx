@@ -6,6 +6,7 @@ import Flashcard from "../components/Flashcard";
 import TimerWidget from "../components/TimerWidget";
 import { FlashcardContext } from "../contexts/FlashcardContext";
 import { usePomodoroContext } from "../contexts/PomodoroContext";
+import { motion } from "framer-motion";
 
 export default function Review() {
   const pomodoroContext = usePomodoroContext();
@@ -25,7 +26,11 @@ export default function Review() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen p-6 bg-dark">
+    <motion.div 
+      initial={{opacity: 0}}
+      animate={{opacity: 1}}
+      className="flex flex-col h-screen p-6 bg-dark"
+    >
       <div className="flex justify-start">
         <Link draggable="false" to="/" className="select-none px-4 py-2 rounded-full bg-dark-secondary flex items-center justify-center hover:bg-dark-secondary-hover transition-colors duration-200">
           &#8592;
@@ -45,7 +50,7 @@ export default function Review() {
               (<div key={reviewCardIndex}>
                 <Flashcard card={reviewCards[reviewCardIndex]} />
               </div>) :
-              <p className="text-xl">No Cards to Review</p>
+              <p className="-mt-10">No Cards to Review</p>
           }
         </div>
         {
@@ -109,6 +114,6 @@ export default function Review() {
           </div>
         }
       </div>
-    </div>
+    </motion.div>
   )
 }

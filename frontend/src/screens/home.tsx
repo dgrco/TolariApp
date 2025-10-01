@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import TimerWidget from "../components/TimerWidget";
 import { CheckIcon, EditIcon, TrashIcon } from "../components/SVGComponents";
 import { DeleteFlashcard, ModifyFlashcard } from "../../wailsjs/go/main/App";
+import NumberInput from "../components/NumericInput";
 
 enum CardMode {
   READ,
@@ -33,10 +34,25 @@ export default function HomePage() {
       return;
     }
 
-    setCardIndex((prev) =>
-      prev === null ? 0 : Math.min(prev, keys.length - 1)
+    setCardIndex((prev) => {
+      const savedCardIndex = localStorage.getItem('cardIndex');
+
+      // We use Math.min(...) here in case we delete the last card
+      if (savedCardIndex) {
+        return prev === null ? parseInt(savedCardIndex) : Math.min(prev, keys.length - 1)
+      } 
+
+      // Fallback
+      return prev === null ? 0 : Math.min(prev, keys.length - 1)
+    }
     );
   }, [cardCtx.flashcards]);
+
+  useEffect(() => {
+    if (cardIndex !== null) {
+      localStorage.setItem('cardIndex', cardIndex.toString());
+    }
+  }, [cardIndex])
 
   // The remToPx function is no longer needed since we are using Tailwind's rem units directly.
   const svgSize = "1.5rem";
@@ -134,7 +150,7 @@ export default function HomePage() {
       </div>
       <div className="flex flex-col items-center m-4">
         <div className="flex justify-between items-center">
-          {cardKeys.length > 1 && mode === CardMode.READ && 
+          {cardKeys.length > 1 && mode === CardMode.READ &&
             <button
               className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 select-none"
               onClick={() => {
@@ -163,7 +179,7 @@ export default function HomePage() {
               <p>No Cards to Display</p>
             }
           </AnimatePresence>
-          {cardKeys.length > 1 && mode === CardMode.READ && 
+          {cardKeys.length > 1 && mode === CardMode.READ &&
             <button
               className="m-4 h-12 w-12 text-2xl bg-dark-secondary rounded-full hover:bg-dark-secondary-hover transition-colors duration-200 select-none"
               onClick={() => {
@@ -188,7 +204,21 @@ export default function HomePage() {
                   className="flex flex-1 justify-between items-center"
                 >
                   <span className="w-[12.5rem] select-none">{/* Spacer */}</span>
-                  <p className="w-24 select-none">{cardIndex + 1} / {cardKeys.length}</p>
+
+                  <div className="flex items-center">
+                    <NumberInput
+                      defaultValue={cardIndex + 1}
+                      onChange={(val) => {
+                        setCardIndex(val - 1)
+                      }}
+                      bind={cardIndex + 1}
+                      min={1}
+                      max={cardKeys.length}
+                      className="w-12 px-1 py-1 bg-dark-secondary text-center rounded-md"
+                    />
+                    <p className="w-8 select-none"> / {cardKeys.length}</p>
+                  </div>
+
                   <div className="flex gap-2">
                     <button
                       className="flex bg-secondary w-24 h-8 rounded-full justify-center items-center hover:opacity-85 transition-opacity cursor-pointer select-none"
