@@ -47,12 +47,12 @@ const Category = ({ id, title, children }: CategoryProps) => {
       <style>
         {`
           .highlight {
-            background-color: rgba(124, 58, 237, 0.85);
+            background-color: rgba(59, 130, 246, 0.8);
           }
         `}
       </style>
       <div id={id} className="flex flex-col p-2 rounded-lg bg-dark transition-colors">
-        <div className="w-fit px-2 py-1 my-2 text-lg text-text bg-primary font-semibold rounded-lg">
+        <div className="w-fit py-2 text-xl font-bold rounded-lg">
           {title}
         </div>
         {children}
